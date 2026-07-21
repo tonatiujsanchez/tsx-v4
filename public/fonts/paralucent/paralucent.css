@@ -1,0 +1,7 @@
+@font-face {
+    font-family: "Paralucent";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('./ParalucentDemiBold2.otf') format('opentype');
+}
