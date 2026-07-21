@@ -1,0 +1,85 @@
+---
+import Icon from '../ui/Icon.astro'
+
+interface Props {
+  currentPage: number
+  totalPages: number
+  basePath?: string
+}
+
+const { currentPage, totalPages, basePath = '/blog' } = Astro.props
+
+const getPageHref = (page: number) =>
+  page === 1 ? basePath : `${basePath}/page/${page}`
+---
+
+{totalPages > 1 && (
+  <nav class="blog-pagination" aria-label="Paginación del blog">
+    {currentPage > 1 ? (
+      <a href={getPageHref(currentPage - 1)} class="blog-pagination__btn">
+        <Icon name="bx-left-arrow-alt" />
+        <span>Anterior</span>
+      </a>
+    ) : (
+      <span class="blog-pagination__btn blog-pagination__btn--disabled" aria-disabled="true">
+        <Icon name="bx-left-arrow-alt" />
+        <span>Anterior</span>
+      </span>
+    )}
+
+    <span class="blog-pagination__info">
+      Página {currentPage} de {totalPages}
+    </span>
+
+    {currentPage < totalPages ? (
+      <a href={getPageHref(currentPage + 1)} class="blog-pagination__btn">
+        <span>Siguiente</span>
+        <Icon name="bx-right-arrow-alt" />
+      </a>
+    ) : (
+      <span class="blog-pagination__btn blog-pagination__btn--disabled" aria-disabled="true">
+        <span>Siguiente</span>
+        <Icon name="bx-right-arrow-alt" />
+      </span>
+    )}
+  </nav>
+)}
+
+<style>
+.blog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4rem;
+  padding-block: 4rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 2rem;
+}
+
+.blog-pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.blog-pagination__btn:hover {
+  opacity: 0.75;
+}
+
+.blog-pagination__btn--disabled {
+  color: var(--text-muted);
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.blog-pagination__info {
+  font-size: 1.4rem;
+  color: var(--text-muted);
+}
+</style>

@@ -1,0 +1,149 @@
+---
+import type { BlogCategory, BlogCover } from '../../types/index'
+import PostMeta from './PostMeta.astro'
+import TagPill from './TagPill.astro'
+
+interface Props {
+  title: string
+  description: string
+  publishedAt: Date
+  updatedAt?: Date
+  category: BlogCategory
+  tags?: string[]
+  cover?: BlogCover
+  author?: string
+  readingTime?: string
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  category,
+  tags,
+  cover,
+  author,
+  readingTime,
+} = Astro.props
+---
+
+<header class="post-header">
+  <div class="post-header__content">
+    <div data-reveal>
+      <PostMeta
+        publishedAt={publishedAt}
+        updatedAt={updatedAt}
+        category={category}
+        readingTime={readingTime}
+      />
+    </div>
+    <h1 class="post-header__title" data-reveal data-reveal-delay="1">{title}</h1>
+    <p class="post-header__description" data-reveal data-reveal-delay="2">{description}</p>
+    {(author || (tags && tags.length > 0)) && (
+      <div class="post-header__footer" data-reveal data-reveal-delay="3">
+        {author && <span class="post-header__author">{author}</span>}
+        {tags && tags.length > 0 && (
+          <div class="post-header__tags">
+            {tags.map(tag => <TagPill tag={tag} />)}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+  {cover && (
+    <figure class="post-header__figure" data-reveal data-reveal-delay="2">
+      <img
+        src={cover.src}
+        alt={cover.alt}
+        loading="eager"
+        fetchpriority="high"
+        class="post-header__img"
+      />
+      {cover.caption && <figcaption class="post-header__caption">{cover.caption}</figcaption>}
+    </figure>
+  )}
+</header>
+
+<style>
+.post-header {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 6rem 2rem 4rem;
+}
+
+.post-header__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.post-header__title {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 600;
+  color: var(--title-color);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .post-header__title {
+    font-size: 4.2rem;
+  }
+}
+
+.post-header__description {
+  font-size: 1.8rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 60rem;
+}
+
+.post-header__footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+.post-header__author {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.post-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.post-header__figure {
+  margin: 3.2rem 0 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  background: var(--surface-2);
+}
+
+.post-header__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.post-header__caption {
+  display: block;
+  padding: 1rem 1.6rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-top: 1px solid var(--border-subtle);
+}
+</style>

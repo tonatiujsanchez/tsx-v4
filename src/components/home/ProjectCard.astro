@@ -1,0 +1,226 @@
+---
+interface Props {
+  title: string
+  slug: string
+  year?: number
+  summary: string
+  thumbnail: {
+    full: string
+    md: string
+    sm: string
+  }
+  variant?: 'featured' | 'default'
+  index?: number
+}
+
+import Icon from '../ui/Icon.astro'
+
+const { title, slug, year, summary, thumbnail, variant = 'default', index } = Astro.props
+const isFeatured = variant === 'featured'
+const num = index ? String(index).padStart(2, '0') : null
+---
+
+<article
+  class:list={['project', { 'project--featured': isFeatured }]}
+  data-reveal
+  data-spotlight
+  data-testid={`project-card-${slug}`}
+>
+  <a class="project__link" href={`/projects/${slug}`} aria-label={`Ver proyecto ${title}`}>
+    <figure class="project__figure">
+      <img
+        class="project__img"
+        src={isFeatured ? thumbnail.full : thumbnail.md}
+        alt={`Captura de pantalla de ${title}`}
+        loading={isFeatured ? 'eager' : 'lazy'}
+        transition:name={`project-cover-${slug}`}
+        onerror={`this.onerror=null;this.src='${thumbnail.full}'`}
+      />
+    </figure>
+    <div class="project__description">
+      <div class="project__header">
+        {num && <span class="project__num" aria-hidden="true">{num}</span>}
+        {year && <span class="project__year">{year}</span>}
+      </div>
+      <h3 class="project__title">
+        {title}
+        <Icon name="bx-right-arrow-alt" class="project__arrow" />
+      </h3>
+      <p class="project__summary">{summary}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project {
+    position: relative;
+    background: var(--card-surface);
+    border: var(--card-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-base);
+  }
+
+  /* Spotlight follows cursor (set via --mx/--my in animations.ts) */
+  .project::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      28rem circle at var(--mx, 50%) var(--my, 50%),
+      rgba(211, 115, 78, 0.09),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  .project:hover,
+  .project:focus-within {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: rgba(211, 115, 78, 0.3);
+  }
+
+  .project:hover::after,
+  .project:focus-within::after {
+    opacity: 1;
+  }
+
+  .project__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+  }
+
+  .project__figure {
+    width: 100%;
+    aspect-ratio: 543 / 326;
+    overflow: hidden;
+    background: var(--surface-2);
+    flex: none;
+    border-block-end: var(--border-subtle);
+  }
+
+  .project__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .project:hover .project__img,
+  .project:focus-within .project__img {
+    transform: scale(1.03);
+  }
+
+  .project__description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 2rem 2.4rem 2.4rem;
+    flex: 1;
+  }
+
+  .project__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .project__num {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    letter-spacing: 0.1em;
+  }
+
+  .project__num::after {
+    content: ' /';
+    color: var(--text-muted);
+  }
+
+  .project__year {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 0.3rem 0.9rem;
+    border-radius: var(--radius-pill);
+    border: var(--border-subtle);
+    white-space: nowrap;
+  }
+
+  .project__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--title-color);
+    transition: color var(--transition-fast);
+  }
+
+  .project:hover .project__title {
+    color: var(--primary-color);
+  }
+
+  .project__arrow {
+    font-size: 2rem;
+    flex: none;
+    transition: transform var(--transition-fast);
+  }
+
+  .project:hover .project__arrow,
+  .project:focus-within .project__arrow {
+    transform: translateX(5px);
+  }
+
+  .project__summary {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  /* ── Featured: editorial split ── */
+  @media (min-width: 768px) {
+    .project--featured .project__link {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .project--featured .project__figure {
+      width: 58%;
+      aspect-ratio: auto;
+      border-block-end: none;
+      border-inline-end: var(--border-subtle);
+    }
+
+    .project--featured .project__description {
+      width: 42%;
+      justify-content: center;
+      padding: 3.2rem 3.6rem;
+    }
+
+    .project--featured .project__title {
+      font-size: 2.8rem;
+    }
+
+    .project--featured .project__summary {
+      font-size: 1.6rem;
+    }
+  }
+</style>

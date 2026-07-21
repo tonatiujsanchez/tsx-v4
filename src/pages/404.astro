@@ -1,0 +1,329 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Icon from '@components/ui/Icon.astro'
+
+const title = '404 · Página no encontrada | Tonatiuj Sánchez'
+const description = 'La ruta que buscas ya no existe. Vuelve al inicio o explora los proyectos y notas más recientes.'
+---
+
+<BaseLayout title={title} description={description} noindex ogType="website">
+  <main class="notfound" role="main">
+    <div class="notfound__grid-bg" aria-hidden="true"></div>
+    <div class="notfound__glow" aria-hidden="true"></div>
+
+    <div class="notfound__container container container--wide">
+      <a class="notfound__logo" href="/" aria-label="Ir al inicio">
+        <img
+          src="/favicon/logo-ts.svg"
+          alt="TSX"
+          width="42"
+          height="42"
+        />
+      </a>
+
+      <div class="notfound__content">
+        <p class="notfound__eyebrow">
+          <span class="notfound__eyebrow-index">ERR</span>
+          <span class="notfound__eyebrow-divider" aria-hidden="true"></span>
+          <span>Ruta no encontrada</span>
+        </p>
+
+        <h1 class="notfound__code" aria-label="Error 404">
+          <span class="notfound__code-digit">4</span>
+          <span class="notfound__code-digit notfound__code-digit--accent">0</span>
+          <span class="notfound__code-digit">4</span>
+        </h1>
+
+        <p class="notfound__title">Se perdió la señal.</p>
+        <p class="notfound__text">
+          La página que intentas visitar cambió de dirección o nunca existió.
+          Puedes volver al inicio o revisar mi trabajo publicado.
+        </p>
+
+        <div class="notfound__actions">
+          <a class="notfound__cta notfound__cta--primary" href="/" data-testid="404-home">
+            Volver al inicio
+            <Icon name="bx-right-arrow-alt" class="notfound__cta-arrow" />
+          </a>
+          <a class="notfound__cta notfound__cta--secondary" href="/#proyectos" data-testid="404-projects">
+            Ver proyectos
+          </a>
+          <a class="notfound__link" href="/blog" data-testid="404-blog">
+            Leer el blog
+          </a>
+        </div>
+
+        <ul class="notfound__meta" aria-hidden="true">
+          <li><span>status</span><span>404</span></li>
+          <li><span>signal</span><span>lost</span></li>
+          <li><span>next</span><span>/</span></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .notfound {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    padding-block: 6rem 4rem;
+    overflow: hidden;
+    background: var(--body-color);
+  }
+
+  .notfound__grid-bg {
+    --line-color: rgba(0, 0, 0, 0.04);
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-color) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 40%, black 20%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 40%, black 20%, transparent 78%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  :global(html.dark-theme) .notfound__grid-bg {
+    --line-color: rgba(255, 255, 255, 0.045);
+  }
+
+  .notfound__glow {
+    position: absolute;
+    inset-block-start: 20%;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    width: 60rem;
+    height: 40rem;
+    background: radial-gradient(ellipse, rgba(211, 115, 78, 0.14), transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .notfound__container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .notfound__logo img {
+    height: 3.6rem;
+    width: auto;
+  }
+
+  .notfound__logo {
+    align-self: flex-start;
+    transition: transform var(--transition-fast), opacity var(--transition-fast);
+  }
+
+  .notfound__logo:hover {
+    transform: scale(1.06);
+    opacity: 0.85;
+  }
+
+  .notfound__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    max-width: 60rem;
+  }
+
+  .notfound__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+  }
+
+  .notfound__eyebrow-index {
+    font-family: var(--font-display);
+    color: var(--text-muted);
+    letter-spacing: 0.14em;
+  }
+
+  .notfound__eyebrow-divider {
+    width: 3.2rem;
+    height: 1px;
+    background: linear-gradient(to right, var(--primary-color), transparent);
+  }
+
+  .notfound__code {
+    font-family: var(--font-display);
+    font-size: clamp(9rem, 22vw, 18rem);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--title-color);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 0;
+  }
+
+  .notfound__code-digit {
+    display: inline-block;
+    animation: notfound-in 700ms var(--ease-emphasized) both;
+  }
+
+  .notfound__code-digit:nth-child(2) {
+    animation-delay: 90ms;
+  }
+
+  .notfound__code-digit:nth-child(3) {
+    animation-delay: 180ms;
+  }
+
+  .notfound__code-digit--accent {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--primary-color);
+  }
+
+  .notfound__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    font-weight: 600;
+    color: var(--title-color);
+    letter-spacing: -0.005em;
+  }
+
+  .notfound__text {
+    font-size: 1.55rem;
+    line-height: 1.7;
+    color: var(--text-color);
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  .notfound__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-block-start: 0.8rem;
+  }
+
+  .notfound__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.1rem 2.2rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .notfound__cta--primary {
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(211, 115, 78, 0.3);
+  }
+
+  .notfound__cta--primary:hover,
+  .notfound__cta--primary:focus-visible {
+    background: #c05f3a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(211, 115, 78, 0.4);
+  }
+
+  .notfound__cta--secondary {
+    color: var(--title-color);
+    border: var(--border-normal);
+  }
+
+  .notfound__cta--secondary:hover,
+  .notfound__cta--secondary:focus-visible {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .notfound__cta-arrow {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .notfound__cta--primary:hover .notfound__cta-arrow,
+  .notfound__cta--primary:focus-visible .notfound__cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .notfound__link {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-color);
+    padding-block: 0.4rem;
+    border-block-end: 1px solid transparent;
+    text-decoration: none;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .notfound__link:hover,
+  .notfound__link:focus-visible {
+    color: var(--primary-color);
+    border-block-end-color: rgba(211, 115, 78, 0.4);
+  }
+
+  .notfound__meta {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2.4rem;
+    padding-block-start: 2rem;
+    border-block-start: var(--border-subtle);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .notfound__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .notfound__meta li span:last-child {
+    color: var(--primary-color);
+  }
+
+  @keyframes notfound-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notfound__code-digit {
+      animation: none !important;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .notfound {
+      padding-block: 10rem 6rem;
+    }
+    .notfound__container {
+      gap: 4rem;
+    }
+  }
+</style>

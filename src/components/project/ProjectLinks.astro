@@ -1,0 +1,116 @@
+---
+import Icon from '../ui/Icon.astro'
+
+interface Props {
+  github?: string
+  live?: string
+  githubFrontend?: string
+  githubBackend?: string
+}
+
+const { github, live, githubFrontend, githubBackend } = Astro.props
+const hasLinks = github || live || githubFrontend || githubBackend
+---
+
+{hasLinks && (
+  <div class="project-links">
+    {githubFrontend && (
+      <a
+        class="project-links__btn"
+        href={githubFrontend}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Ver repositorio frontend en GitHub"
+      >
+        <Icon name="bxl-github" class="project-links__icon" />
+        <span>Frontend</span>
+      </a>
+    )}
+    {githubBackend && (
+      <a
+        class="project-links__btn"
+        href={githubBackend}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Ver repositorio backend en GitHub"
+      >
+        <Icon name="bxl-github" class="project-links__icon" />
+        <span>Backend</span>
+      </a>
+    )}
+    {github && (
+      <a
+        class="project-links__btn"
+        href={github}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Ver código fuente en GitHub"
+      >
+        <Icon name="bxl-github" class="project-links__icon" />
+        <span>Repositorio</span>
+      </a>
+    )}
+    {live && (
+      <a
+        class="project-links__btn project-links__btn--primary"
+        href={live}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Ver demo en vivo"
+      >
+        <Icon name="bx-link-external" class="project-links__icon" />
+        <span>Ver demo</span>
+      </a>
+    )}
+  </div>
+)}
+
+<style>
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .project-links__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block: 0.8rem;
+    padding-inline: 1.6rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--title-color);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .project-links__btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(211, 115, 78, 0.3);
+    box-shadow: var(--shadow-glow);
+    text-decoration: none;
+  }
+
+  .project-links__btn--primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+  }
+
+  .project-links__btn--primary:hover {
+    background: transparent;
+    color: var(--primary-color);
+  }
+
+  .project-links__icon {
+    font-size: 1.6rem;
+    flex: none;
+  }
+</style>

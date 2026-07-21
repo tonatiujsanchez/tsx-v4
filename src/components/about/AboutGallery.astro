@@ -1,0 +1,326 @@
+---
+import { galleryPhotos } from '@data/about'
+import Icon from '@components/ui/Icon.astro'
+
+// Predefined desktop positions (left, top, rotate) inside a 960x560 stage.
+// Values are in px; the stage is responsive so we clamp with JS on drag.
+const positions: Array<{ left: number; top: number; rotate: number }> = [
+  { left: 30,  top: 40,  rotate: -6 },
+  { left: 210, top: 90,  rotate: 3 },
+  { left: 420, top: 30,  rotate: -2 },
+  { left: 600, top: 110, rotate: 4 },
+  { left: 760, top: 30, rotate: 4 },
+  { left: 100, top: 260, rotate: 5 },
+  { left: 310, top: 300, rotate: -4 },
+  { left: 520, top: 280, rotate: 2 },
+  { left: 700, top: 260, rotate: -3 },
+]
+---
+
+<div class="gallery" data-gallery data-testid="about-gallery">
+  <div class="gallery__header">
+    <div class="gallery__meta">
+      <span class="gallery__label">Signal Photo Desk</span>
+      <span class="gallery__count">{String(galleryPhotos.length).padStart(2, '0')} escenas</span>
+    </div>
+    <button type="button" class="gallery__reset" data-gallery-reset data-testid="about-gallery-reset">
+      <Icon name="bx-refresh" class="gallery__reset-icon" />
+      <span>Reordenar</span>
+    </button>
+  </div>
+
+  <div class="gallery__stage" data-gallery-stage aria-label="Galería de fotografías">
+    <div class="gallery__grid-bg" aria-hidden="true"></div>
+
+    {galleryPhotos.map((photo, index) => {
+      const pos = positions[index % positions.length]
+      return (
+        <figure
+          class="card"
+          data-gallery-card
+          data-initial-x={pos.left}
+          data-initial-y={pos.top}
+          data-initial-rotate={pos.rotate}
+          style={`--rotate: ${pos.rotate}deg;`}
+        >
+          <div class="card__frame" style={`aspect-ratio: ${photo.ratio};`}>
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              width={photo.width}
+              height={photo.height}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+            <span class="card__tag">{photo.tag}</span>
+          </div>
+          <figcaption class="card__caption">{photo.caption}</figcaption>
+        </figure>
+      )
+    })}
+  </div>
+
+  <p class="gallery__hint" aria-hidden="true">
+    <span class="gallery__hint-dot"></span>
+    <span class="gallery__hint-text">Arrastra las tarjetas dentro del panel</span>
+  </p>
+</div>
+
+<script>
+  import { initAboutGallery, teardownAboutGallery } from '@scripts/aboutGallery'
+
+  const boot = (): void => initAboutGallery()
+
+  boot()
+  document.addEventListener('astro:page-load', boot)
+  document.addEventListener('astro:before-swap', teardownAboutGallery)
+</script>
+
+<style>
+  .gallery {
+    position: relative;
+    margin-block-start: 3rem;
+  }
+
+  .gallery__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+    padding-block-end: 1.6rem;
+    border-block-end: var(--border-subtle);
+    margin-block-end: 1.6rem;
+  }
+
+  .gallery__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+  }
+
+  .gallery__label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+  }
+
+  .gallery__count {
+    font-size: 1.2rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .gallery__reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text-color);
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .gallery__reset:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .gallery__reset-icon {
+    font-size: 1.6rem;
+  }
+
+  /* ── Stage (mobile default = horizontal strip) ── */
+  .gallery__stage {
+    position: relative;
+    display: flex;
+    gap: 1.6rem;
+    padding: 0.6rem 2rem 2rem;
+    margin-inline: -2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .gallery__stage::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery__grid-bg {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 78%;
+    max-width: 32rem;
+    scroll-snap-align: start;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .card__frame {
+    position: relative;
+    width: 100%;
+    background: var(--surface-2);
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+  }
+
+  .card__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .card__tag {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-start: 1rem;
+    padding: 0.4rem 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: #fff;
+    background: rgba(24, 24, 27, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: var(--radius-xs);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .card__caption {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    padding-inline: 0.2rem;
+    text-wrap: pretty;
+  }
+
+  .gallery__hint {
+    display: none;
+  }
+
+  /* ── Desktop stage: absolutely positioned draggable cards ── */
+  @media (min-width: 900px) {
+    .gallery__stage {
+      position: relative;
+      display: block;
+      height: 56rem;
+      min-height: 56rem;
+      padding: 0;
+      margin-inline: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(211, 115, 78, 0.04), transparent 60%),
+        var(--surface-1);
+      border: var(--card-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-inner);
+      touch-action: pan-y;
+    }
+
+    .gallery__grid-bg {
+      display: block;
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 85%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 85%);
+      pointer-events: none;
+    }
+
+    :global(html.dark-theme) .gallery__grid-bg {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    }
+
+    .card {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      width: 22rem;
+      max-width: none;
+      flex: none;
+      scroll-snap-align: none;
+      cursor: grab;
+      transform: rotate(var(--rotate));
+      transition: box-shadow var(--transition-fast), transform 220ms var(--ease-emphasized);
+      will-change: transform;
+    }
+
+    .card:hover {
+      z-index: 100;
+    }
+
+    .card.is-dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+
+    .card.is-active .card__frame {
+      box-shadow: var(--shadow-glow), var(--shadow-strong);
+      border-color: rgba(211, 115, 78, 0.35);
+    }
+
+    .card__frame {
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .card__caption {
+      font-size: 1.2rem;
+      margin-block-start: 0.6rem;
+      opacity: 0.85;
+    }
+
+    .gallery__hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-block-start: 1.4rem;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gallery__hint-dot {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      background: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(211, 115, 78, 0.18);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card {
+      transition: none !important;
+    }
+  }
+</style>

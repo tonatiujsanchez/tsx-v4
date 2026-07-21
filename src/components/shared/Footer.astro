@@ -1,0 +1,100 @@
+---
+import { siteConfig, socialLinks } from '@data/site'
+import Icon from '../ui/Icon.astro'
+
+const year = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="footer__container container container--wide">
+    <div class="footer__row">
+      <a href="/" class="footer__brand" aria-label="Inicio">
+        <img src="/favicon/logo-ts.svg" alt="TSX" width="24" height="24" class="footer__logo" />
+        <span class="footer__name">{siteConfig.author}</span>
+      </a>
+      <ul class="footer__social" role="list">
+        {socialLinks.map((link) => (
+          <li>
+            <a
+              class="footer__social-link"
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+            >
+              <Icon name={link.icon} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p class="footer__copy">
+      &copy; {year} {siteConfig.author}. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-block-start: var(--border-subtle);
+    padding-block: 2.8rem;
+  }
+
+  .footer__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .footer__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+  }
+
+  .footer__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer__logo {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .footer__name {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--title-color);
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .footer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 1.7rem;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+  }
+
+  .footer__social-link:hover {
+    color: var(--primary-color);
+    background: var(--surface-2);
+  }
+
+  .footer__copy {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+  }
+</style>

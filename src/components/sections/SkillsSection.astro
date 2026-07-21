@@ -1,0 +1,126 @@
+---
+import { skillGroups } from '@data/skills'
+import TechIcon from '@components/ui/TechIcon.astro'
+---
+
+<section class="skills-section section" id="habilidades">
+  <div class="container container--wide">
+    <p class="section__eyebrow" data-reveal>03 — Stack técnico</p>
+    <h2 class="section__title" data-reveal>Habilidades</h2>
+    <p class="section__description" data-reveal data-reveal-delay="1">
+      Tecnologías con las que trabajo a diario.
+    </p>
+
+    <div class="skill-groups">
+      {skillGroups.map((group) => (
+        <div class="skill-group" data-reveal>
+          <h3 class="skill-group__title">{group.title}</h3>
+          <ul class="skill-group__list" role="list">
+            {group.skills.map((tech) => (
+              <li class="skill-chip">
+                <span class="skill-chip__icon">
+                  <TechIcon techKey={tech} size={20} />
+                </span>
+                <span class="skill-chip__name">{tech}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section__description {
+    max-width: 58ch;
+  }
+
+  .skill-groups {
+    margin-block-start: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .skill-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding-block: 2.4rem;
+    border-block-start: var(--border-subtle);
+  }
+
+  .skill-group:last-child {
+    border-block-end: var(--border-subtle);
+  }
+
+  .skill-group__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-muted);
+    flex: none;
+  }
+
+  .skill-group__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 1.4rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .skill-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(211, 115, 78, 0.3);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .skill-chip__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    overflow: hidden;
+  }
+
+  .skill-chip__name {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--title-color);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 768px) {
+    .skill-group {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 3rem;
+    }
+
+    .skill-group__title {
+      width: 16rem;
+      padding-block-start: 1rem;
+    }
+
+    .skill-group__list {
+      flex: 1;
+    }
+  }
+</style>

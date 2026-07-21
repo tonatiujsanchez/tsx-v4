@@ -1,0 +1,18 @@
+---
+import Icon from '../ui/Icon.astro'
+---
+
+<button
+  type="button"
+  aria-label="Alternar tema claro/oscuro"
+  data-theme-toggle
+  class="button-change-theme"
+>
+  <Icon name="bx-sun" class="button-change-theme__icon" />
+</button>
+
+<script>
+  import { initTheme } from '@scripts/theme'
+  initTheme()
+  document.addEventListener('astro:after-swap', initTheme)
+</script>

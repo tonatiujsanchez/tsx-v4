@@ -1,0 +1,486 @@
+@import './animations.css';
+
+/* ===================================================
+   DESIGN TOKENS
+   =================================================== */
+:root {
+    --font-primary: "Poppins", sans-serif;
+    --font-display: "Paralucent", "Poppins", sans-serif;
+
+    /* Colores base */
+    --title-color: #171717;
+    --text-color: #71717A;
+    --text-color-light: #A6A6A6;
+    --body-color: #F8FAFC;
+    --container-color: #F8FAFC;
+    --content-color: #E5E5E5;
+    --gray-primary-color: #DBDCDF;
+    --black-primary-color: #2B2B2B;
+    --white-primary-color: #F8FAFC;
+
+    /* Brand */
+    --primary-color: #D3734E;
+
+    /* Feedback */
+    --success-color: #07AC4F;
+    --error-color: #d30000;
+
+    /* Colores de tecnologías */
+    --javascript-color: #F7DF1E;
+    --typescript-color: #2F74C0;
+    --reactjs-color: #0FD2F4;
+    --nextjs-color: #000000;
+    --nodejs-color: #026E00;
+    --sql-color: #015E88;
+    --mongo-color: #07AC4F;
+    --github-color: #1C1F24;
+    --git-color: #F05030;
+    --sass-color: #CD669A;
+    --tailwind-color: #38BDF8;
+    --figma-color: #F34E1C;
+    --emotion-color: #D26AC2;
+    --redux-color: #764ABC;
+
+    /* Bordes y sombras */
+    --border-primary: 0.1rem solid var(--gray-primary-color);
+    --shadow-primary: 0 0.5rem 1rem var(--gray-primary-color);
+    --shadow-primary-top: 0 -0.1rem 0.6rem var(--gray-primary-color);
+
+    /* Superficies */
+    --surface-0: #F8FAFC;
+    --surface-1: #FFFFFF;
+    --surface-2: #F1F5F9;
+    --surface-elevated: #FFFFFF;
+
+    /* Bordes semánticos */
+    --border-subtle: 0.1rem solid rgba(0, 0, 0, 0.06);
+    --border-normal: 0.1rem solid rgba(0, 0, 0, 0.12);
+
+    /* Acento con transparencia */
+    --primary-color-alpha: rgba(211, 115, 78, 0.2);
+
+    /* Texto adicional */
+    --text-muted: #A1A1AA;
+
+    /* Radius */
+    --radius-xs: 0.2rem;
+    --radius-sm: 0.4rem;
+    --radius-md: 0.6rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.6rem;
+    --radius-pill: 10rem;
+
+    /* Sombras */
+    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 0 0 1px var(--primary-color-alpha), 0 4px 12px var(--primary-color-alpha);
+    --shadow-inner: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    /* Transiciones */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-emphasized: cubic-bezier(0.0, 0, 0.2, 1);
+
+    /* Cards y backdrop */
+    --backdrop-surface: rgba(248, 250, 252, 0.85);
+    --backdrop-blur: blur(12px);
+    --card-border: 0.1rem solid rgba(0, 0, 0, 0.08);
+    --card-surface: #FFFFFF;
+    --card-surface-hover: #F8FAFC;
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--primary-color-alpha);
+}
+
+/* Tema oscuro — clase en <html> para evitar FOUC */
+html.dark-theme {
+    --title-color: #F1F5F9;
+    --text-color: #c9c9c9;
+    --body-color: #18181B;
+    --container-color: #242424;
+    --content-color: #222222;
+    --border-primary: 0.1rem solid #3F3F46;
+    --shadow-primary: 0 0.5rem 1.4rem var(--black-primary-color);
+    --shadow-primary-top: 0 -0.1rem 0.6rem var(--black-primary-color);
+
+    /* Superficies dark */
+    --surface-0: #18181B;
+    --surface-1: #1E1E21;
+    --surface-2: #27272A;
+    --surface-elevated: #2D2D30;
+
+    /* Bordes semánticos dark */
+    --border-subtle: 0.1rem solid rgba(255, 255, 255, 0.05);
+    --border-normal: 0.1rem solid rgba(255, 255, 255, 0.10);
+
+    /* Acento con transparencia dark */
+    --primary-color-alpha: rgba(211, 115, 78, 0.25);
+
+    /* Texto adicional dark */
+    --text-muted: #71717A;
+
+    /* Sombras dark */
+    --shadow-soft: 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 0 1px var(--primary-color-alpha), 0 4px 16px var(--primary-color-alpha);
+    --shadow-inner: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+
+    /* Cards y backdrop dark */
+    --backdrop-surface: rgba(24, 24, 27, 0.85);
+    --card-border: 0.1rem solid rgba(255, 255, 255, 0.07);
+    --card-surface: #1E1E21;
+    --card-surface-hover: #252528;
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --card-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--primary-color-alpha);
+}
+
+
+/* ===================================================
+   RESET Y BASE
+   =================================================== */
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin: 0;
+    background-color: var(--body-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-base);
+}
+
+::selection {
+    background-color: var(--primary-color-alpha);
+    color: var(--title-color);
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    color: var(--title-color);
+}
+
+ul, figure {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+p {
+    line-height: 1.7;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+input {
+    font-family: inherit;
+    border: none;
+    outline: none;
+}
+
+textarea {
+    font-family: var(--font-primary);
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+
+/* ===================================================
+   UTILIDADES GLOBALES
+   =================================================== */
+.container {
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 2rem;
+}
+
+.container--wide {
+    max-width: 104rem;
+}
+
+.section {
+    padding-block: 5rem;
+}
+
+.section__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--primary-color);
+    margin-block-end: 1.2rem;
+}
+
+.section__eyebrow::after {
+    content: '';
+    flex: none;
+    width: 4.8rem;
+    height: 1px;
+    background: linear-gradient(to right, var(--primary-color), transparent);
+}
+
+.section__title {
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-block-end: 1.2rem;
+}
+
+@media (min-width: 768px) {
+    .section__title {
+        font-size: 4.2rem;
+    }
+}
+
+.section__description {
+    color: var(--text-color);
+    text-wrap: pretty;
+}
+
+.link-external-icon {
+    transform: rotate(-45deg);
+    font-size: 2rem;
+}
+
+.button-change-theme {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+    font-size: 2rem;
+}
+
+.button-change-theme:hover {
+    color: var(--title-color);
+}
+
+/* Helpers para SVG que deben adaptarse al tema */
+.icon__black svg {
+    fill: var(--title-color);
+}
+
+/* Nav icons: solo visibles en mobile (bottom nav) */
+@media (min-width: 768px) {
+    .nav__link-icon {
+        display: none;
+    }
+}
+
+.svg__fill-contrast {
+    fill: var(--title-color);
+}
+
+.svg__fill-contrast--dark {
+    fill: var(--body-color);
+}
+
+.icon__styled-components {
+    color: var(--text-color);
+    font-size: 2rem;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+}
+
+.icon__styled-components img {
+    max-width: 1.4rem;
+}
+
+
+/* ===================================================
+   TOAST
+   =================================================== */
+.toast {
+    position: fixed;
+    inset-inline-end: 50%;
+    transform: translateX(50%);
+    inset-block-start: -10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--surface-elevated);
+    color: var(--title-color);
+    padding-inline: 2rem;
+    min-width: 22rem;
+    width: 85%;
+    padding-block: 1.2rem;
+    border-radius: 0.5rem;
+    z-index: 99;
+    box-shadow: var(--shadow-strong);
+    border: var(--border-normal);
+    transition: all 0.3s ease-out;
+    visibility: hidden;
+}
+
+.toast__show {
+    visibility: visible;
+    inset-block-start: 5rem;
+}
+
+.toast__icon {
+    font-size: 2.4rem;
+}
+
+.toast__icon--success {
+    color: var(--success-color);
+}
+
+.toast__icon--error {
+    color: var(--error-color);
+}
+
+
+/* ===================================================
+   LOADER
+   =================================================== */
+.loader {
+    width: 2.6rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 0.3rem solid var(--text-color);
+    border-right-color: var(--body-color);
+    animation: rotation 0.5s infinite linear;
+}
+
+
+/* ===================================================
+   SCROLL TOP
+   =================================================== */
+.scroll-top {
+    position: fixed;
+    inset-inline-end: 2rem;
+    inset-block-end: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6rem;
+    border-radius: var(--radius-md, 0.6rem);
+    z-index: 10;
+    background: var(--surface-elevated);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
+    color: var(--title-color);
+    cursor: pointer;
+    transition:
+        visibility 0s,
+        opacity var(--transition-base),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+    visibility: hidden;
+    opacity: 0;
+}
+
+.scroll-top__show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.scroll-top:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    border-color: rgba(211, 115, 78, 0.3);
+}
+
+.scroll-top__icon {
+    font-size: 2.4rem;
+    color: var(--title-color);
+}
+
+
+/* ===================================================
+   FOOTER (layout offsets: styles scoped in Footer.astro)
+   =================================================== */
+.footer {
+    margin-block-end: 8.5rem;
+}
+
+
+/* ===================================================
+   MEDIA QUERIES
+   =================================================== */
+@media (min-width: 480px) {
+    .toast {
+        max-width: 32rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .toast {
+        inset-block-start: unset;
+        inset-block-end: -10rem;
+    }
+
+    .toast__show {
+        inset-block-end: 7rem;
+    }
+
+    .scroll-top {
+        inset-inline-end: 3rem;
+        inset-block-end: 3rem;
+        padding: 0.8rem;
+    }
+
+    .section {
+        padding-block: 8rem;
+    }
+
+    .footer {
+        margin-block-start: 2rem;
+        margin-block-end: 0;
+    }
+}
+
+/* ===================================================
+   REDUCED MOTION
+   =================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import type { BlogCategory } from '../../../types/index'
+import BlogLayout from '../../../layouts/BlogLayout.astro'
+import BlogCard from '../../../components/blog/BlogCard.astro'
+import CategoryPill from '../../../components/blog/CategoryPill.astro'
+import { siteConfig } from '../../../data/site'
+import { getVisiblePosts, sortPostsByDate, getAllCategories } from '../../../utils/blog'
+import Icon from '../../../components/ui/Icon.astro'
+
+export async function getStaticPaths() {
+  const isDev = import.meta.env.DEV
+  const allPosts = await getCollection('blog')
+  const posts = getVisiblePosts(allPosts, isDev)
+  const categories = getAllCategories(posts)
+
+  return categories.map(category => ({
+    params: { category },
+    props: {
+      category: category as BlogCategory,
+      posts: sortPostsByDate(posts.filter(p => p.data.category === category)),
+    },
+  }))
+}
+
+interface Props {
+  category: BlogCategory
+  posts: CollectionEntry<'blog'>[]
+}
+
+const { category, posts } = Astro.props
+
+const CATEGORY_LABELS: Record<string, string> = {
+  ia: 'IA',
+  tutoriales: 'Tutoriales',
+  desarrollo: 'Desarrollo',
+  herramientas: 'Herramientas',
+  novedades: 'Novedades',
+  'prompt-engineering': 'Prompt Engineering',
+}
+
+const label = CATEGORY_LABELS[category] ?? category
+const canonical = `${siteConfig.url}/blog/categoria/${category}`
+const description = `Artículos sobre ${label} — ${siteConfig.author}`
+---
+
+<BlogLayout
+  title={`${label} — Blog — ${siteConfig.author}`}
+  description={description}
+  canonical={canonical}
+  ogType="website"
+>
+  <section class="category-page">
+    <div class="container">
+      <header class="category-page__header" data-reveal>
+        <a href="/blog" class="category-page__back">
+          <Icon name="bx-left-arrow-alt" /> Blog
+        </a>
+        <div class="category-page__category">
+          <CategoryPill category={category} />
+        </div>
+        <h1 class="category-page__title">{label}</h1>
+        <p class="category-page__count">
+          {posts.length} {posts.length === 1 ? 'artículo' : 'artículos'}
+        </p>
+      </header>
+
+      {posts.length === 0 ? (
+        <div class="category-page__empty" data-reveal>
+          <p class="category-page__empty-text">
+            No hay artículos publicados en esta categoría.
+          </p>
+        </div>
+      ) : (
+        <div class="category-page__grid" data-reveal-stagger>
+          {posts.map(post => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              excerpt={post.data.excerpt}
+              href={`/blog/${post.id}`}
+              publishedAt={post.data.publishedAt}
+              updatedAt={post.data.updatedAt}
+              category={post.data.category}
+              tags={post.data.tags}
+              cover={post.data.cover}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BlogLayout>
+
+<style>
+.category-page {
+  padding-block: 8rem;
+  min-height: calc(100vh - 8rem);
+}
+
+.category-page__header {
+  max-width: 60rem;
+  margin: 0 auto 5rem;
+  text-align: center;
+}
+
+.category-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-block-end: 2rem;
+  transition: color var(--transition-fast);
+}
+
+.category-page__back:hover {
+  color: var(--primary-color);
+}
+
+.category-page__category {
+  margin-block-end: 1.6rem;
+}
+
+.category-page__title {
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: var(--title-color);
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .category-page__title {
+    font-size: 4.8rem;
+  }
+}
+
+.category-page__count {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.category-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+}
+
+@media (min-width: 640px) {
+  .category-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-page__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.category-page__empty {
+  text-align: center;
+  padding: 8rem 2rem;
+}
+
+.category-page__empty-text {
+  font-size: 1.7rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+</style>

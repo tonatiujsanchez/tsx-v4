@@ -1,0 +1,278 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+import Icon from '@components/ui/Icon.astro'
+
+interface Props {
+  currentSlug: string
+}
+
+const { currentSlug } = Astro.props
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+)
+const currentIndex = projects.findIndex((p) => p.id === currentSlug)
+const previous: CollectionEntry<'projects'> | null =
+  currentIndex > 0 ? projects[currentIndex - 1] : null
+const next: CollectionEntry<'projects'> | null =
+  currentIndex >= 0 && currentIndex < projects.length - 1
+    ? projects[currentIndex + 1]
+    : null
+---
+
+<nav class="project-nav" aria-label="Navegación entre proyectos" data-testid="project-nav">
+  <p class="project-nav__eyebrow">Explorar más proyectos</p>
+
+  <div class="project-nav__grid">
+    {previous ? (
+      <a
+        class="project-nav__card project-nav__card--prev"
+        href={`/projects/${previous.id}`}
+        rel="prev"
+        aria-label={`Proyecto anterior: ${previous.data.title}`}
+        data-testid="project-nav-prev"
+      >
+        <span class="project-nav__direction">
+          <Icon name="bx-left-arrow-alt" class="project-nav__direction-icon" />
+          Proyecto anterior
+        </span>
+        <span class="project-nav__cover">
+          <img
+            src={previous.data.cover}
+            alt=""
+            width="200"
+            height="120"
+            loading="lazy"
+            decoding="async"
+            aria-hidden="true"
+          />
+        </span>
+        <span class="project-nav__title">{previous.data.title}</span>
+      </a>
+    ) : (
+      <a
+        class="project-nav__stub project-nav__stub--start"
+        href="/#proyectos"
+        data-testid="project-nav-back"
+      >
+        <Icon name="bx-left-arrow-alt" class="project-nav__direction-icon" />
+        <span>Volver a todos los proyectos</span>
+      </a>
+    )}
+
+    {next ? (
+      <a
+        class="project-nav__card project-nav__card--next"
+        href={`/projects/${next.id}`}
+        rel="next"
+        aria-label={`Proyecto siguiente: ${next.data.title}`}
+        data-testid="project-nav-next"
+      >
+        <span class="project-nav__direction">
+          Proyecto siguiente
+          <Icon name="bx-right-arrow-alt" class="project-nav__direction-icon" />
+        </span>
+        <span class="project-nav__cover">
+          <img
+            src={next.data.cover}
+            alt=""
+            width="200"
+            height="120"
+            loading="lazy"
+            decoding="async"
+            aria-hidden="true"
+          />
+        </span>
+        <span class="project-nav__title">{next.data.title}</span>
+      </a>
+    ) : (
+      <a
+        class="project-nav__stub project-nav__stub--end"
+        href="/#proyectos"
+        data-testid="project-nav-back"
+      >
+        <span>Volver a todos los proyectos</span>
+        <Icon name="bx-right-arrow-alt" class="project-nav__direction-icon" />
+      </a>
+    )}
+  </div>
+</nav>
+
+<style>
+  .project-nav {
+    margin-block: 5rem 2rem;
+    padding-block-start: 3rem;
+    border-block-start: var(--border-subtle);
+  }
+
+  .project-nav__eyebrow {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+    margin-block-end: 2rem;
+  }
+
+  .project-nav__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .project-nav__card {
+    display: grid;
+    grid-template-areas:
+      'dir dir'
+      'cover title';
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+    padding: 1.6rem 1.8rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    color: var(--title-color);
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .project-nav__card:hover,
+  .project-nav__card:focus-visible {
+    border-color: rgba(211, 115, 78, 0.35);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .project-nav__card--next {
+    text-align: right;
+    grid-template-areas:
+      'dir dir'
+      'title cover';
+    grid-template-columns: 1fr auto;
+  }
+
+  .project-nav__direction {
+    grid-area: dir;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-family: var(--font-display);
+  }
+
+  .project-nav__card--next .project-nav__direction {
+    justify-content: flex-end;
+  }
+
+  .project-nav__direction-icon {
+    font-size: 1.6rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .project-nav__card--prev:hover .project-nav__direction-icon,
+  .project-nav__card--prev:focus-visible .project-nav__direction-icon {
+    transform: translateX(-3px);
+  }
+
+  .project-nav__card--next:hover .project-nav__direction-icon,
+  .project-nav__card--next:focus-visible .project-nav__direction-icon {
+    transform: translateX(3px);
+  }
+
+  .project-nav__cover {
+    grid-area: cover;
+    width: 7.2rem;
+    aspect-ratio: 5 / 3;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: var(--border-subtle);
+    flex: none;
+  }
+
+  .project-nav__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-nav__title {
+    grid-area: title;
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--title-color);
+    text-wrap: balance;
+  }
+
+  .project-nav__card:hover .project-nav__title,
+  .project-nav__card:focus-visible .project-nav__title {
+    color: var(--primary-color);
+  }
+
+  /* Stub (fallback for start/end) */
+  .project-nav__stub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.6rem 1.8rem;
+    background: var(--surface-2);
+    border: 1px dashed rgba(211, 115, 78, 0.35);
+    border-radius: var(--radius-lg);
+    color: var(--text-color);
+    font-size: 1.35rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .project-nav__stub:hover,
+  .project-nav__stub:focus-visible {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .project-nav__stub--end {
+    justify-content: flex-end;
+    justify-self: end;
+  }
+
+  @media (min-width: 768px) {
+    .project-nav__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .project-nav__cover {
+      width: 8.4rem;
+    }
+
+    .project-nav__title {
+      font-size: 1.9rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-nav__card,
+    .project-nav__stub,
+    .project-nav__direction-icon {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>

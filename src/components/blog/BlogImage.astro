@@ -1,0 +1,49 @@
+---
+interface Props {
+  src: string
+  alt: string
+  caption?: string
+}
+
+const { src, alt, caption } = Astro.props
+---
+
+{src && (
+  <figure class="blog-image">
+    <img src={src} alt={alt} loading="lazy" class="blog-image__img" />
+    {caption && <figcaption class="blog-image__caption">{caption}</figcaption>}
+  </figure>
+)}
+
+<style>
+.blog-image {
+  margin: 2.4rem 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  background: var(--surface-1);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.blog-image:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+.blog-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.blog-image__caption {
+  display: block;
+  padding: 1rem 1.6rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+}
+</style>

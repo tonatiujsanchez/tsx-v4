@@ -1,0 +1,165 @@
+---
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import BlogLayout from '../../../layouts/BlogLayout.astro'
+import BlogCard from '../../../components/blog/BlogCard.astro'
+import TagPill from '../../../components/blog/TagPill.astro'
+import { siteConfig } from '../../../data/site'
+import { getVisiblePosts, sortPostsByDate, getAllTags } from '../../../utils/blog'
+import Icon from '../../../components/ui/Icon.astro'
+
+export async function getStaticPaths() {
+  const isDev = import.meta.env.DEV
+  const allPosts = await getCollection('blog')
+  const posts = getVisiblePosts(allPosts, isDev)
+  const tags = getAllTags(posts)
+
+  return tags.map(tag => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: sortPostsByDate(posts.filter(p => (p.data.tags ?? []).includes(tag))),
+    },
+  }))
+}
+
+interface Props {
+  tag: string
+  posts: CollectionEntry<'blog'>[]
+}
+
+const { tag, posts } = Astro.props
+
+const canonical = `${siteConfig.url}/blog/tag/${tag}`
+const description = `Artículos etiquetados con "${tag}" — ${siteConfig.author}`
+---
+
+<BlogLayout
+  title={`#${tag} — Blog — ${siteConfig.author}`}
+  description={description}
+  canonical={canonical}
+  ogType="website"
+>
+  <section class="tag-page">
+    <div class="container">
+      <header class="tag-page__header" data-reveal>
+        <a href="/blog" class="tag-page__back">
+          <Icon name="bx-left-arrow-alt" /> Blog
+        </a>
+        <div class="tag-page__pill">
+          <TagPill tag={tag} />
+        </div>
+        <h1 class="tag-page__title">#{tag}</h1>
+        <p class="tag-page__count">
+          {posts.length} {posts.length === 1 ? 'artículo' : 'artículos'}
+        </p>
+      </header>
+
+      {posts.length === 0 ? (
+        <div class="tag-page__empty" data-reveal>
+          <p class="tag-page__empty-text">
+            No hay artículos publicados con este tag.
+          </p>
+        </div>
+      ) : (
+        <div class="tag-page__grid" data-reveal-stagger>
+          {posts.map(post => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              excerpt={post.data.excerpt}
+              href={`/blog/${post.id}`}
+              publishedAt={post.data.publishedAt}
+              updatedAt={post.data.updatedAt}
+              category={post.data.category}
+              tags={post.data.tags}
+              cover={post.data.cover}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BlogLayout>
+
+<style>
+.tag-page {
+  padding-block: 8rem;
+  min-height: calc(100vh - 8rem);
+}
+
+.tag-page__header {
+  max-width: 60rem;
+  margin: 0 auto 5rem;
+  text-align: center;
+}
+
+.tag-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-block-end: 2rem;
+  transition: color var(--transition-fast);
+}
+
+.tag-page__back:hover {
+  color: var(--primary-color);
+}
+
+.tag-page__pill {
+  margin-block-end: 1.6rem;
+}
+
+.tag-page__title {
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: var(--title-color);
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .tag-page__title {
+    font-size: 4.8rem;
+  }
+}
+
+.tag-page__count {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.tag-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+}
+
+@media (min-width: 640px) {
+  .tag-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .tag-page__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.tag-page__empty {
+  text-align: center;
+  padding: 8rem 2rem;
+}
+
+.tag-page__empty-text {
+  font-size: 1.7rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+</style>

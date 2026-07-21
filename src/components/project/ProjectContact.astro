@@ -1,0 +1,105 @@
+---
+import Icon from '../ui/Icon.astro'
+import { siteConfig } from '@data/site'
+
+interface Props {
+  text?: string
+}
+
+const {
+  text = '¿Estás interesado en colaborar juntos? No dudes en ponerte en contacto conmigo.',
+} = Astro.props
+
+const mailtoHref = `mailto:${siteConfig.email}?subject=Hablemos%20de%20un%20proyecto`
+---
+
+<section class="project-contact" aria-label="Contacto">
+  <div class="project-contact__card">
+    <Icon name="bx-mail-send" class="project-contact__icon" />
+    <p class="project-contact__text">{text}</p>
+    <a href={mailtoHref} class="project-contact__cta" aria-label="Escríbeme por correo">
+      Contáctame
+      <Icon name="bx-right-arrow-alt" class="project-contact__arrow" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .project-contact {
+    margin-block-end: 8rem;
+  }
+
+  .project-contact__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 3.5rem 2rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* subtle accent glow top */
+  .project-contact__card::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 25%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    opacity: 0.5;
+  }
+
+  .project-contact__icon {
+    font-size: 3.2rem;
+    color: var(--primary-color);
+  }
+
+  .project-contact__text {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    max-width: 46rem;
+    text-wrap: pretty;
+  }
+
+  .project-contact__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.9rem;
+    padding-inline: 2.4rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: 0.1rem solid var(--primary-color);
+    border-radius: var(--radius-md);
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .project-contact__cta:hover {
+    background: transparent;
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  .project-contact__arrow {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .project-contact__cta:hover .project-contact__arrow {
+    transform: translateX(3px);
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import type { BlogCategory } from '../../types/index'
+
+interface Props {
+  category: BlogCategory
+  href?: string
+}
+
+const CATEGORY_LABELS: Record<BlogCategory, string> = {
+  ia: 'IA',
+  tutoriales: 'Tutoriales',
+  desarrollo: 'Desarrollo',
+  herramientas: 'Herramientas',
+  novedades: 'Novedades',
+  'prompt-engineering': 'Prompt Engineering',
+}
+
+const { category, href } = Astro.props
+const label = CATEGORY_LABELS[category]
+---
+
+{href
+  ? <a href={href} class="category-pill">{label}</a>
+  : <span class="category-pill">{label}</span>
+}
+
+<style>
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.9rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-pill);
+  background: var(--primary-color-alpha);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  white-space: nowrap;
+  transition: var(--transition-fast);
+  text-decoration: none;
+}
+
+a.category-pill:hover,
+a.category-pill:focus-visible {
+  background: var(--primary-color);
+  color: #fff;
+}
+</style>

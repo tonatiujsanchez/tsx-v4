@@ -1,0 +1,429 @@
+---
+import { siteConfig, socialLinks } from '@data/site'
+import Icon from '../ui/Icon.astro'
+---
+
+<section class="hero" id="hola">
+  <div class="hero__grid-bg" aria-hidden="true"></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="hero__container container container--wide">
+    <div class="hero__layout">
+
+      <div class="hero__content">
+        <div class="hero__status" data-reveal>
+          <img
+            class="hero__avatar"
+            src="/img/profile/tsj.webp"
+            alt={`Foto de perfil de ${siteConfig.author}`}
+            width="44"
+            height="44"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <span class="hero__status-dot" aria-hidden="true"></span>
+          <span class="hero__status-text">Disponible para nuevos proyectos</span>
+        </div>
+
+        <div class="hero__intro" data-reveal data-reveal-delay="1">
+          <p class="hero__eyebrow">{siteConfig.role} · Full Stack · IA</p>
+          <h1 class="hero__name">Tonatiuj<br /><span class="hero__name-accent">Sánchez</span></h1>
+        </div>
+
+        <p class="hero__about" data-reveal data-reveal-delay="2">{siteConfig.description}</p>
+
+        <div class="hero__actions" data-reveal data-reveal-delay="3">
+          <a class="hero__cta hero__cta--primary" href="#proyectos" data-testid="hero-projects-cta">
+            Ver proyectos
+            <Icon name="bx-right-arrow-alt" class="hero__cta-arrow" />
+          </a>
+          <a class="hero__cta hero__cta--secondary" href="#contacto" data-testid="hero-contact-cta">
+            Contacto
+          </a>
+          <a
+            class="hero__cta hero__cta--ghost"
+            href={siteConfig.cvPath}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Descargar CV de Tonatiuj Sánchez"
+            data-testid="hero-cv-link"
+          >
+            <Icon name="bx-download" class="hero__cta-download" />
+            CV
+          </a>
+        </div>
+
+        <ul class="hero__social-list" data-reveal data-reveal-delay="4">
+          {socialLinks.map((link) => (
+            <li>
+              <a
+                class="hero__social-link"
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+              >
+                <Icon name={link.icon} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="hero__scene" data-reveal data-reveal-delay="2">
+        <div class="hero-scene" id="hero-scene-mount" aria-hidden="true">
+          <div class="hero-scene__fallback">
+            <span class="hero-scene__ring hero-scene__ring--1"></span>
+            <span class="hero-scene__ring hero-scene__ring--2"></span>
+            <img
+              class="hero-scene__logo"
+              src="/favicon/logo-ts.svg"
+              alt=""
+              width="120"
+              height="120"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  import { setupHeroScene } from '@scripts/heroScene'
+  setupHeroScene()
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: 4rem 2rem;
+    overflow: hidden;
+  }
+
+  /* Blueprint grid background */
+  .hero__grid-bg {
+    --line-color: rgba(0, 0, 0, 0.04);
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-color) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 95% 90% at 60% 0%, black 25%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 95% 90% at 60% 0%, black 25%, transparent 78%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  :global(html.dark-theme) .hero__grid-bg {
+    --line-color: rgba(255, 255, 255, 0.045);
+  }
+
+  .hero__glow {
+    position: absolute;
+    inset-block-start: -20%;
+    inset-inline-end: -10%;
+    width: 60rem;
+    height: 60rem;
+    background: radial-gradient(circle, rgba(211, 115, 78, 0.1), transparent 62%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero__container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+  }
+
+  /* Status chip with compact avatar */
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    align-self: flex-start;
+    padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .hero__avatar {
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 2px solid var(--primary-color-alpha);
+  }
+
+  .hero__status-dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(7, 172, 79, 0.18);
+    flex: none;
+  }
+
+  .hero__status-text {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text-color);
+    letter-spacing: 0.01em;
+  }
+
+  /* Intro */
+  .hero__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .hero__eyebrow {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--primary-color);
+  }
+
+  .hero__name {
+    font-family: var(--font-display);
+    font-size: clamp(4.6rem, 11vw, 8.4rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+    color: var(--title-color);
+  }
+
+  .hero__name-accent {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--primary-color);
+  }
+
+  .hero__about {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    line-height: 1.75;
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  /* CTAs */
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .hero__cta--primary {
+    padding: 1.1rem 2.4rem;
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(211, 115, 78, 0.3);
+  }
+
+  .hero__cta--primary:hover {
+    background: #c05f3a;
+    border-color: #c05f3a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(211, 115, 78, 0.4);
+  }
+
+  .hero__cta-arrow {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .hero__cta--primary:hover .hero__cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .hero__cta--secondary {
+    padding: 1.1rem 2.4rem;
+    border: var(--border-normal);
+    color: var(--title-color);
+    background: transparent;
+  }
+
+  .hero__cta--secondary:hover {
+    border-color: rgba(211, 115, 78, 0.45);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .hero__cta--ghost {
+    padding: 1.1rem 1.6rem;
+    color: var(--text-color);
+    border: 1px dashed transparent;
+  }
+
+  .hero__cta--ghost:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.35);
+  }
+
+  .hero__cta-download {
+    font-size: 1.6rem;
+  }
+
+  /* Social */
+  .hero__social-list {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: var(--radius-md);
+    border: var(--card-border);
+    background-color: var(--surface-1);
+    color: var(--text-color);
+    font-size: 1.8rem;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .hero__social-link:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.35);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* ── Scene ── */
+  .hero__scene {
+    width: 100%;
+  }
+
+  .hero-scene {
+    position: relative;
+    width: 100%;
+    height: 30rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-scene :global(.hero-scene__canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1;
+  }
+
+  /* Static fallback */
+  .hero-scene__fallback {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24rem;
+    height: 24rem;
+    transition: opacity 0.8s var(--ease-standard);
+  }
+
+  .hero-scene--ready .hero-scene__fallback {
+    opacity: 0;
+  }
+
+  .hero-scene__logo {
+    width: 9rem;
+    height: 9rem;
+    filter: drop-shadow(0 0 24px rgba(211, 115, 78, 0.45));
+  }
+
+  .hero-scene__ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(211, 115, 78, 0.3);
+  }
+
+  .hero-scene__ring--1 {
+    width: 17rem;
+    height: 17rem;
+    border-style: dashed;
+  }
+
+  .hero-scene__ring--2 {
+    width: 23rem;
+    height: 23rem;
+    border-color: rgba(211, 115, 78, 0.15);
+  }
+
+  /* ── Desktop ── */
+  @media (min-width: 900px) {
+    .hero {
+      padding-block: 6rem 4rem;
+    }
+
+    .hero__layout {
+      flex-direction: row;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .hero__content {
+      flex: 1.15;
+    }
+
+    .hero__scene {
+      flex: 1;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-scene {
+      height: 52rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scene__fallback {
+      opacity: 1 !important;
+    }
+  }
+</style>

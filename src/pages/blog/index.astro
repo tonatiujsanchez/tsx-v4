@@ -1,0 +1,135 @@
+---
+import { getCollection } from 'astro:content'
+import BlogLayout from '../../layouts/BlogLayout.astro'
+import BlogCard from '../../components/blog/BlogCard.astro'
+import BlogPagination from '../../components/blog/BlogPagination.astro'
+import { siteConfig } from '../../data/site'
+import { sortPostsByDate, getTotalPages, paginatePosts } from '../../utils/blog'
+
+const POSTS_PER_PAGE = 10
+const isDev = import.meta.env.DEV
+
+const allPosts = await getCollection('blog', ({ data }) => isDev || !data.draft)
+const sorted = sortPostsByDate(allPosts)
+
+const totalPages = getTotalPages(sorted.length, POSTS_PER_PAGE)
+const pagePosts = paginatePosts(sorted, 1, POSTS_PER_PAGE)
+
+const canonical = `${siteConfig.url}/blog`
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: `Blog — ${siteConfig.author}`,
+  description: 'Notas sobre IA, desarrollo web y herramientas para ingenieros de software.',
+  url: canonical,
+  author: { '@type': 'Person', name: siteConfig.author },
+}
+---
+
+<BlogLayout
+  title={`Blog — ${siteConfig.author}`}
+  description="Notas sobre IA, desarrollo web y herramientas para ingenieros de software."
+  canonical={canonical}
+  ogType="website"
+  jsonLd={jsonLd}
+>
+  <section class="blog-index">
+    <div class="container">
+      <header class="blog-index__header" data-reveal>
+        <h1 class="blog-index__title">Blog</h1>
+        <p class="blog-index__lead">
+          Notas sobre IA, desarrollo web y herramientas para ingenieros de software.
+        </p>
+      </header>
+
+      {sorted.length === 0 ? (
+        <div class="blog-index__empty" data-reveal>
+          <p class="blog-index__empty-text">Aún no hay artículos publicados.</p>
+          <p class="blog-index__empty-hint">Estoy preparando notas sobre IA, desarrollo y herramientas.</p>
+        </div>
+      ) : (
+        <>
+          <div class="blog-index__list">
+            {pagePosts.map(post => (
+              <BlogCard
+                title={post.data.title}
+                description={post.data.description}
+                excerpt={post.data.excerpt}
+                href={`/blog/${post.id}`}
+                publishedAt={post.data.publishedAt}
+                updatedAt={post.data.updatedAt}
+                category={post.data.category}
+                tags={post.data.tags}
+                cover={post.data.cover}
+                featured={post.data.featured}
+              />
+            ))}
+          </div>
+          <BlogPagination currentPage={1} totalPages={totalPages} />
+        </>
+      )}
+    </div>
+  </section>
+</BlogLayout>
+
+<style>
+.blog-index {
+  padding-block: 8rem;
+  min-height: calc(100vh - 8rem);
+}
+
+.blog-index__header {
+  max-width: 72rem;
+  margin-block-end: 4rem;
+}
+
+.blog-index__title {
+  font-family: var(--font-display);
+  font-size: 3.6rem;
+  font-weight: 600;
+  color: var(--title-color);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .blog-index__title {
+    font-size: 4rem;
+  }
+}
+
+.blog-index__lead {
+  font-size: 1.6rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.blog-index__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.blog-index__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 8rem 0;
+}
+
+.blog-index__empty-text {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--title-color);
+  margin: 0;
+}
+
+.blog-index__empty-hint {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+</style>

@@ -1,0 +1,408 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import ProjectLayout from '@layouts/ProjectLayout.astro'
+import TechIcon from '@components/ui/TechIcon.astro'
+import Icon from '@components/ui/Icon.astro'
+import ProjectFigure from '@components/ui/ProjectFigure.astro'
+import ProjectContact from '@components/project/ProjectContact.astro'
+import ProjectNavigation from '@components/project/ProjectNavigation.astro'
+import { siteConfig } from '@data/site'
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects')
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }))
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>
+}
+
+const { project } = Astro.props
+const { title, description, cover, coverCaption, tech, demo, github, githubFrontend, githubBackend, gallery, year } =
+  project.data
+const { Content } = await render(project)
+
+const canonical = `${siteConfig.url}/projects/${project.id}`
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: title,
+  description,
+  url: canonical,
+  image: `${siteConfig.url}${cover}`,
+  author: {
+    '@type': 'Person',
+    name: siteConfig.author,
+    url: siteConfig.url,
+  },
+}
+
+const hasLinks = github || githubFrontend || githubBackend || demo
+---
+
+<ProjectLayout
+  title={`${title} | Tonatiuj Sánchez`}
+  description={description}
+  canonical={canonical}
+  ogImage={cover}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <main class="project-detail container">
+
+    <!-- Hero -->
+    <section class="project-hero" data-reveal>
+      <h1 class="project-hero__title">{title}</h1>
+      <p class="project-hero__description">{description}</p>
+
+      {year && (
+        <div class="project-hero__meta">
+          <span class="meta-tag">{year}</span>
+        </div>
+      )}
+
+      {hasLinks && (
+        <div class="project-hero__links">
+          {githubFrontend && (
+            <a
+              class="project-action"
+              href={githubFrontend}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ver repositorio frontend en GitHub"
+            >
+              <Icon name="bxl-github" />
+              <span>Frontend</span>
+            </a>
+          )}
+          {githubBackend && (
+            <a
+              class="project-action"
+              href={githubBackend}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ver repositorio backend en GitHub"
+            >
+              <Icon name="bxl-github" />
+              <span>Backend</span>
+            </a>
+          )}
+          {github && (
+            <a
+              class="project-action"
+              href={github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ver código fuente en GitHub"
+            >
+              <Icon name="bxl-github" />
+              <span>Repositorio</span>
+            </a>
+          )}
+          {demo && (
+            <a
+              class="project-action project-action--primary"
+              href={demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ver demo en vivo"
+            >
+              <Icon name="bx-link-external" />
+              <span>Ver demo</span>
+            </a>
+          )}
+        </div>
+      )}
+
+      <ProjectFigure
+        src={cover}
+        alt={`Portada de ${title}`}
+        caption={coverCaption}
+        transitionName={`project-cover-${project.id}`}
+      />
+    </section>
+
+    <!-- Tech stack -->
+    <section class="project-section">
+      <h2 class="project-subtitle" data-reveal>Tecnologías</h2>
+      <div class="project-tech" data-reveal-stagger>
+        {tech.map((t) => (
+          <div class="tech-pill" data-reveal>
+            <span class="tech-pill__icon">
+              <TechIcon techKey={t} size={18} />
+            </span>
+            <span class="tech-pill__name">{t}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    {gallery && gallery.length > 0 && (
+      <section class="project-section project-gallery">
+        <h2 class="project-subtitle" data-reveal>Vistas del proyecto</h2>
+        {gallery.map((item) => (
+          <ProjectFigure
+            src={item.src}
+            alt={`Vista de ${title}`}
+            caption={item.caption}
+          />
+        ))}
+      </section>
+    )}
+
+    <!-- Markdown content -->
+    <div class="project-content" data-reveal>
+      <Content />
+    </div>
+
+    <ProjectContact />
+
+    <ProjectNavigation currentSlug={project.id} />
+
+  </main>
+</ProjectLayout>
+
+<style>
+  .project-detail {
+    padding-block-end: 0;
+  }
+
+  /* ===== Hero ===== */
+
+  .project-hero {
+    padding-block-start: 4rem;
+    padding-block-end: 0;
+    margin-block-end: 5rem;
+  }
+
+  .project-hero__title {
+    font-family: var(--font-display);
+    color: var(--title-color);
+    font-size: 3.4rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-block-end: 1.4rem;
+  }
+
+  .project-hero__description {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    line-height: 1.7;
+    max-width: 68rem;
+    text-wrap: pretty;
+    margin-block-end: 2rem;
+  }
+
+  .project-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-block-end: 2rem;
+  }
+
+  .meta-tag {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 0.3rem 1rem;
+    border-radius: var(--radius-pill);
+    border: var(--border-subtle);
+  }
+
+  .project-hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-block-end: 3rem;
+  }
+
+  .project-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block: 0.8rem;
+    padding-inline: 1.6rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--title-color);
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .project-action:hover {
+    transform: translateY(-1px);
+    border-color: rgba(211, 115, 78, 0.3);
+    box-shadow: var(--shadow-glow);
+    text-decoration: none;
+  }
+
+  .project-action--primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+  }
+
+  .project-action--primary:hover {
+    background: transparent;
+    color: var(--primary-color);
+  }
+
+  .project-action i {
+    font-size: 1.6rem;
+    flex: none;
+  }
+
+  /* ===== Sections ===== */
+
+  .project-section {
+    margin-block-end: 5rem;
+  }
+
+  .project-subtitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-block-end: 1.6rem;
+  }
+
+  /* ===== Tech stack ===== */
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tech-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    padding-block: 0.4rem;
+    padding-inline: 1.2rem;
+    font-size: 1.4rem;
+    color: var(--title-color);
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .tech-pill:hover {
+    border-color: rgba(211, 115, 78, 0.2);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .tech-pill__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    overflow: hidden;
+  }
+
+  .tech-pill__name {
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+
+  /* ===== Gallery ===== */
+
+  .project-gallery {
+    margin-block-end: 2rem;
+  }
+
+  /* ===== Markdown content ===== */
+
+  .project-content {
+    margin-block-end: 5rem;
+    color: var(--text-color);
+    line-height: 1.75;
+    font-size: 1.6rem;
+  }
+
+  .project-content :global(h2) {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--title-color);
+    margin-block-start: 3rem;
+    margin-block-end: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .project-content :global(h3) {
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-block-start: 2.4rem;
+    margin-block-end: 0.8rem;
+  }
+
+  .project-content :global(p) {
+    margin-block-end: 1.4rem;
+    text-wrap: pretty;
+  }
+
+  .project-content :global(ul),
+  .project-content :global(ol) {
+    padding-inline-start: 2rem;
+    margin-block-end: 1.4rem;
+  }
+
+  .project-content :global(li) {
+    margin-block-end: 0.4rem;
+  }
+
+  .project-content :global(strong) {
+    color: var(--title-color);
+    font-weight: 600;
+  }
+
+  .project-content :global(a) {
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .project-content :global(a:hover) {
+    opacity: 0.8;
+  }
+
+  .project-content :global(code) {
+    font-size: 0.9em;
+    background: var(--surface-2);
+    border: var(--border-subtle);
+    border-radius: var(--radius-xs);
+    padding: 0.1em 0.4em;
+  }
+
+  /* ===== Responsive ===== */
+
+  @media (min-width: 768px) {
+    .project-hero {
+      padding-block-start: 9rem;
+    }
+
+    .project-hero__title {
+      font-size: 4.8rem;
+    }
+  }
+</style>

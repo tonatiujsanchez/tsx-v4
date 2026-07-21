@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content'
+import ProjectCard from '@components/home/ProjectCard.astro'
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+)
+
+const [featured, ...rest] = projects
+---
+
+<section class="projects-section section" id="proyectos">
+  <div class="container container--wide">
+    <header class="projects-section__header">
+      <p class="section__eyebrow" data-reveal>02 — Trabajo seleccionado</p>
+      <h2 class="section__title" data-reveal>Proyectos</h2>
+      <p class="section__description" data-reveal data-reveal-delay="1">
+        Una selección de los proyectos que mejor representan mi trabajo.
+      </p>
+    </header>
+
+    <div class="projects">
+      {featured && (
+        <ProjectCard
+          title={featured.data.title}
+          slug={featured.id}
+          year={featured.data.year}
+          summary={featured.data.summary}
+          thumbnail={{
+            full: featured.data.cover,
+            md: featured.data.cover.replace('.webp', '-543.webp'),
+            sm: featured.data.cover.replace('.webp', '-380.webp'),
+          }}
+          variant="featured"
+          index={1}
+        />
+      )}
+      <div class="projects__grid">
+        {rest.map((project, i) => (
+          <ProjectCard
+            title={project.data.title}
+            slug={project.id}
+            year={project.data.year}
+            summary={project.data.summary}
+            thumbnail={{
+              full: project.data.cover,
+              md: project.data.cover.replace('.webp', '-543.webp'),
+              sm: project.data.cover.replace('.webp', '-380.webp'),
+            }}
+            index={i + 2}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-section__header {
+    margin-block-end: 4.5rem;
+  }
+
+  .section__description {
+    max-width: 58ch;
+  }
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+  }
+
+  @media (min-width: 768px) {
+    .projects__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

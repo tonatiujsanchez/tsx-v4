@@ -1,0 +1,549 @@
+---
+import MainLayout from '@layouts/MainLayout.astro'
+import AboutGallery from '@components/about/AboutGallery.astro'
+import Icon from '@components/ui/Icon.astro'
+import { aboutTags } from '@data/about'
+import { siteConfig, socialLinks } from '@data/site'
+
+const title = 'Sobre mí | Tonatiuj Sánchez'
+const description = 'Conoce a Tonatiuj Sánchez, Software Engineer y desarrollador Full Stack: su forma de trabajar, aprendizaje continuo, tecnología y disciplina dentro y fuera del código.'
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author,
+  url: `${siteConfig.url}/sobre-mi`,
+  jobTitle: siteConfig.role,
+  description,
+  sameAs: socialLinks.map((l) => l.href),
+}
+---
+
+<MainLayout title={title} description={description} ogType="profile" jsonLd={jsonLd}>
+  <main class="about">
+    <div class="about__grid-bg" aria-hidden="true"></div>
+
+    <section class="about__intro container container--wide" aria-labelledby="about-title">
+      <div class="about__intro-layout">
+        <div class="about__intro-content">
+          <p class="about__eyebrow">
+            <span class="about__eyebrow-index">01</span>
+            <span class="about__eyebrow-divider" aria-hidden="true"></span>
+            <span>Perfil — Sobre mí</span>
+          </p>
+          <h1 id="about-title" class="about__title">
+            Código, disciplina<br />
+            <span class="about__title-accent">y curiosidad.</span>
+          </h1>
+          <p class="about__lead">
+            Convertir ideas en productos digitales claros, útiles y bien construidos.
+          </p>
+
+          <div class="about__bio">
+            <p>
+              Soy <strong>Tonatiuj Sánchez Jiménez</strong>, Software Engineer y
+              desarrollador Full Stack. Me gusta convertir ideas en productos
+              digitales claros, útiles y bien construidos, cuidando especialmente
+              la experiencia de usuario, la usabilidad y el rendimiento.
+            </p>
+            <p>
+              Disfruto trabajar de forma colaborativa, comprender el problema
+              antes de elegir la tecnología y buscar soluciones que puedan
+              evolucionar. A lo largo de mi carrera he utilizado distintos
+              lenguajes, frameworks y herramientas para responder a necesidades
+              reales en proyectos web, de escritorio y móviles.
+            </p>
+            <p>
+              El aprendizaje constante forma parte de mi manera de trabajar. Me
+              interesa explorar nuevas tecnologías, experimentar con inteligencia
+              artificial y seguir refinando tanto mis procesos como la calidad de
+              lo que construyo.
+            </p>
+            <p>
+              Fuera del código, el <strong>Taekwondo</strong> ocupa un lugar
+              importante en mi vida. Me ha enseñado perseverancia, disciplina,
+              respeto, concentración y trabajo en equipo: valores que también
+              llevo a mi carrera. También disfruto una buena taza de café, salir
+              al campo y dedicar tiempo a mi espacio de trabajo y a la tecnología
+              que me inspira.
+            </p>
+          </div>
+
+          <ul class="about__tags" role="list">
+            {aboutTags.map((t, i) => (
+              <li class="about__tag">
+                <span class="about__tag-dot" aria-hidden="true"></span>
+                <span class="about__tag-index">{String(i + 1).padStart(2, '0')}</span>
+                <span class="about__tag-label">{t.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <aside class="about__portrait-column" aria-hidden="false">
+          <div class="about__portrait">
+            <div class="about__portrait-frame">
+              <img
+                src="/img/about/about-portrait.webp"
+                alt="Retrato editorial de Tonatiuj Sánchez"
+                width="1200"
+                height="1600"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
+            <span class="about__portrait-corner about__portrait-corner--tl" aria-hidden="true"></span>
+            <span class="about__portrait-corner about__portrait-corner--br" aria-hidden="true"></span>
+            <span class="about__portrait-vline" aria-hidden="true"></span>
+          </div>
+          <div class="about__portrait-meta">
+            <span class="about__portrait-label">Tonatiuj Sánchez</span>
+            <span class="about__portrait-role">{siteConfig.role} — Full Stack</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="about__gallery-section container container--wide" aria-labelledby="gallery-title">
+      <header class="about__section-head">
+        <p class="about__eyebrow">
+          <span class="about__eyebrow-index">02</span>
+          <span class="about__eyebrow-divider" aria-hidden="true"></span>
+          <span>Galería — Fuera de la pantalla</span>
+        </p>
+        <h2 id="gallery-title" class="about__section-title">Fuera de la pantalla</h2>
+        <p class="about__section-text">
+          Algunas escenas sobre la persona que existe detrás de los proyectos,
+          el código y la pantalla.
+        </p>
+      </header>
+
+      <AboutGallery />
+    </section>
+
+    <section class="about__closing container container--wide" aria-labelledby="closing-title">
+      <div class="about__closing-panel">
+        <div class="about__closing-glow" aria-hidden="true"></div>
+        <p class="about__eyebrow">
+          <span class="about__eyebrow-index">03</span>
+          <span class="about__eyebrow-divider" aria-hidden="true"></span>
+          <span>Seguir construyendo</span>
+        </p>
+        <h2 id="closing-title" class="about__closing-title">
+          Cada línea de código<br />
+          <span class="about__title-accent">es una decisión.</span>
+        </h2>
+        <p class="about__closing-text">
+          Si hay una idea rondando en tu cabeza, quizá vale la pena construirla juntos.
+        </p>
+        <div class="about__closing-actions">
+          <a class="about__cta about__cta--primary" href="/#proyectos" data-testid="about-projects-cta">
+            Ver proyectos
+            <Icon name="bx-right-arrow-alt" class="about__cta-arrow" />
+          </a>
+          <a class="about__cta about__cta--secondary" href="/#contacto" data-testid="about-contact-cta">
+            Hablemos
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</MainLayout>
+
+<style>
+  .about {
+    position: relative;
+    overflow: hidden;
+    padding-block: 3rem 6rem;
+  }
+
+  .about__grid-bg {
+    --line-color: rgba(0, 0, 0, 0.035);
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-color) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 90% 60% at 60% 0%, black 20%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 60% 0%, black 20%, transparent 78%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  :global(html.dark-theme) .about__grid-bg {
+    --line-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .about > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Eyebrow (shared) ── */
+  .about__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-block-end: 1.6rem;
+  }
+
+  .about__eyebrow-index {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .about__eyebrow-divider {
+    width: 3.2rem;
+    height: 1px;
+    background: linear-gradient(to right, var(--primary-color), transparent);
+  }
+
+  /* ── Intro ── */
+  .about__intro {
+    padding-block: 3rem 5rem;
+  }
+
+  .about__intro-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about__title {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 9vw, 7.4rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--title-color);
+    margin-block-end: 1.4rem;
+  }
+
+  .about__title-accent {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--primary-color);
+  }
+
+  .about__lead {
+    font-size: 1.7rem;
+    color: var(--text-color);
+    line-height: 1.6;
+    max-width: 50ch;
+    margin-block-end: 2.4rem;
+    text-wrap: pretty;
+  }
+
+  .about__bio {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    max-width: 60ch;
+    margin-block-end: 2.6rem;
+  }
+
+  .about__bio p {
+    font-size: 1.55rem;
+    line-height: 1.75;
+    color: var(--text-color);
+    text-wrap: pretty;
+  }
+
+  .about__bio strong {
+    color: var(--title-color);
+    font-weight: 600;
+  }
+
+  .about__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .about__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 1.2rem 0.7rem 1rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    font-size: 1.25rem;
+    color: var(--text-color);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .about__tag:hover {
+    color: var(--title-color);
+    border-color: rgba(211, 115, 78, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .about__tag-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--primary-color);
+  }
+
+  .about__tag-index {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .about__tag-label {
+    font-weight: 500;
+  }
+
+  /* ── Portrait column ── */
+  .about__portrait-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .about__portrait {
+    position: relative;
+    padding: 1.6rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-medium);
+  }
+
+  .about__portrait-frame {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--surface-2);
+  }
+
+  .about__portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .about__portrait-corner {
+    position: absolute;
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1.5px solid var(--primary-color);
+  }
+
+  .about__portrait-corner--tl {
+    inset-block-start: -0.4rem;
+    inset-inline-start: -0.4rem;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .about__portrait-corner--br {
+    inset-block-end: -0.4rem;
+    inset-inline-end: -0.4rem;
+    border-left: none;
+    border-top: none;
+  }
+
+  .about__portrait-vline {
+    display: none;
+  }
+
+  .about__portrait-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-inline: 0.2rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .about__portrait-label {
+    font-family: var(--font-display);
+    color: var(--title-color);
+    letter-spacing: 0.14em;
+  }
+
+  .about__portrait-role {
+    color: var(--text-muted);
+  }
+
+  /* ── Gallery section ── */
+  .about__gallery-section {
+    padding-block: 4rem 5rem;
+  }
+
+  .about__section-head {
+    max-width: 60ch;
+    margin-block-end: 1rem;
+  }
+
+  .about__section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 600;
+    color: var(--title-color);
+    letter-spacing: -0.01em;
+    margin-block-end: 1rem;
+  }
+
+  .about__section-text {
+    color: var(--text-color);
+    font-size: 1.55rem;
+    line-height: 1.7;
+    max-width: 56ch;
+  }
+
+  /* ── Closing ── */
+  .about__closing {
+    padding-block: 4rem 2rem;
+  }
+
+  .about__closing-panel {
+    position: relative;
+    padding: 4rem 2.4rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .about__closing-glow {
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-start: 60%;
+    width: 50rem;
+    height: 40rem;
+    background: radial-gradient(ellipse, rgba(211, 115, 78, 0.14), transparent 65%);
+    pointer-events: none;
+  }
+
+  .about__closing-panel > :global(*):not(.about__closing-glow) {
+    position: relative;
+  }
+
+  .about__closing-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--title-color);
+    margin-block-end: 1.4rem;
+  }
+
+  .about__closing-text {
+    color: var(--text-color);
+    font-size: 1.55rem;
+    line-height: 1.7;
+    max-width: 48ch;
+    margin-block-end: 2.4rem;
+  }
+
+  .about__closing-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .about__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.1rem 2.4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .about__cta--primary {
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(211, 115, 78, 0.3);
+  }
+
+  .about__cta--primary:hover {
+    background: #c05f3a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(211, 115, 78, 0.4);
+  }
+
+  .about__cta-arrow {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .about__cta--primary:hover .about__cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .about__cta--secondary {
+    color: var(--title-color);
+    border: var(--border-normal);
+  }
+
+  .about__cta--secondary:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* ── Desktop ── */
+  @media (min-width: 900px) {
+    .about {
+      padding-block: 5rem 8rem;
+    }
+
+    .about__intro {
+      padding-block: 4rem 7rem;
+    }
+
+    .about__intro-layout {
+      grid-template-columns: 1.35fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about__portrait-column {
+      position: sticky;
+      inset-block-start: 8rem;
+    }
+
+    .about__portrait-vline {
+      display: block;
+      position: absolute;
+      inset-block-start: 2rem;
+      inset-block-end: 2rem;
+      inset-inline-start: -2.4rem;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(211, 115, 78, 0.4), transparent);
+    }
+
+    .about__closing-panel {
+      padding: 6rem 6rem;
+    }
+  }
+</style>

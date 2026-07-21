@@ -1,0 +1,109 @@
+---
+import { siteConfig } from '@data/site'
+import { ClientRouter } from 'astro:transitions'
+import '@styles/globals.css'
+
+interface Props {
+  title?: string
+  description?: string
+  canonical?: string
+  ogImage?: string
+  ogType?: 'website' | 'article' | 'profile'
+  noindex?: boolean
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[]
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  canonical,
+  ogImage = siteConfig.defaultOgImage,
+  ogType = 'website',
+  noindex = false,
+  jsonLd,
+} = Astro.props
+
+const canonicalURL = canonical ?? (Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : null)
+
+const ogImageURL = ogImage?.startsWith('http')
+  ? ogImage
+  : Astro.site
+    ? new URL(ogImage, Astro.site).toString()
+    : ogImage
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.author} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:site_name" content={siteConfig.siteName} />
+    <meta property="og:locale" content={siteConfig.locale} />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon/logo-ts.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Fonts: preload critical weights, then load full stylesheet -->
+    <link rel="preload" href="/fonts/poppins/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/poppins/Poppins-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/paralucent/ParalucentDemiBold2.otf" as="font" type="font/otf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/fonts/poppins/poppins.css" />
+    <link rel="stylesheet" href="/fonts/paralucent/paralucent.css" />
+
+    {jsonLd && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(jsonLd)}
+      ></script>
+    )}
+
+    <ClientRouter />
+
+    <title>{title}</title>
+
+    <script is:inline>
+      ;(() => {
+        const applyTheme = () => {
+          const t = localStorage.getItem('selected-theme-tsx')
+          const safeTheme = t === 'light-theme' || t === 'dark-theme' ? t : 'dark-theme'
+          document.documentElement.classList.remove('light-theme', 'dark-theme')
+          document.documentElement.classList.add(safeTheme)
+        }
+        applyTheme()
+        document.addEventListener('astro:after-swap', applyTheme)
+      })()
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import { initAnimations } from '@scripts/animations'
+      document.addEventListener('astro:page-load', initAnimations)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+---
+import MainLayout from '@layouts/MainLayout.astro'
+import HeroSection from '@components/sections/HeroSection.astro'
+import ExperienceSection from '@components/sections/ExperienceSection.astro'
+import ProjectsSection from '@components/sections/ProjectsSection.astro'
+import SkillsSection from '@components/sections/SkillsSection.astro'
+import WritingSection from '@components/sections/WritingSection.astro'
+import ContactSection from '@components/sections/ContactSection.astro'
+import { siteConfig, socialLinks } from '@data/site'
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: siteConfig.author,
+    url: siteConfig.url,
+    jobTitle: siteConfig.role,
+    description: siteConfig.description,
+    sameAs: socialLinks.map((l) => l.href),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.siteName,
+    url: siteConfig.url,
+  },
+]
+---
+
+<MainLayout
+  title={siteConfig.title}
+  description={siteConfig.description}
+  jsonLd={jsonLd}
+>
+  <main>
+    <HeroSection />
+    <ExperienceSection />
+    <ProjectsSection />
+    <SkillsSection />
+    <WritingSection />
+    <ContactSection />
+  </main>
+</MainLayout>

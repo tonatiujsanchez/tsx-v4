@@ -1,0 +1,55 @@
+---
+import type { BlogCategory } from '../../types/index'
+import CategoryPill from './CategoryPill.astro'
+
+interface Props {
+  publishedAt: Date
+  updatedAt?: Date
+  category?: BlogCategory
+  readingTime?: string
+}
+
+const { publishedAt, updatedAt, category, readingTime } = Astro.props
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
+---
+
+<div class="post-meta">
+  {category && <CategoryPill category={category} />}
+  <time class="post-meta__date" datetime={publishedAt.toISOString()}>
+    {formatDate(publishedAt)}
+  </time>
+  {readingTime && <span class="post-meta__reading">{readingTime}</span>}
+  {updatedAt && (
+    <span class="post-meta__updated">
+      · Actualizado <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time>
+    </span>
+  )}
+</div>
+
+<style>
+.post-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+}
+
+.post-meta__date {
+  font-variant-numeric: tabular-nums;
+}
+
+.post-meta__reading::before {
+  content: '·';
+  margin-right: 0.6rem;
+  opacity: 0.4;
+}
+
+.post-meta__updated {
+  font-size: 1.3rem;
+  font-style: italic;
+}
+</style>

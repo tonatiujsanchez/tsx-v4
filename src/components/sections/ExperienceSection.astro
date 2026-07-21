@@ -1,0 +1,49 @@
+---
+import { jobs } from '@data/jobs'
+import JobCard from '@components/home/JobCard.astro'
+---
+
+<section class="experience section" id="experiencia">
+  <div class="container container--wide">
+    <p class="section__eyebrow" data-reveal>01 — Trayectoria</p>
+    <h2 class="section__title" data-reveal>Experiencia</h2>
+    <p class="section__description" data-reveal data-reveal-delay="1">
+      He tenido la oportunidad de agregar valor a diferentes tipos de empresas
+      utilizando una gran variedad de herramientas.
+    </p>
+    <div class="timeline" data-reveal-stagger>
+      {jobs.map((job) => (
+        <JobCard job={job} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section__description {
+    max-width: 58ch;
+  }
+
+  .timeline {
+    position: relative;
+    margin-block-start: 4.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-inline-start: 0.4rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    inset-block: 1rem;
+    inset-inline-start: 2.7rem;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      var(--primary-color) 0%,
+      rgba(211, 115, 78, 0.25) 30%,
+      rgba(211, 115, 78, 0.12) 100%
+    );
+  }
+</style>

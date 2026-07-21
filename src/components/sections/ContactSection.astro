@@ -1,0 +1,231 @@
+---
+import { siteConfig, socialLinks } from '@data/site'
+import Icon from '@components/ui/Icon.astro'
+
+const mailtoHref = `mailto:${siteConfig.email}?subject=Hablemos%20de%20un%20proyecto`
+---
+
+<section class="contact-section section" id="contacto">
+  <div class="container container--wide">
+    <div class="contact-panel" data-reveal>
+      <div class="contact-panel__glow" aria-hidden="true"></div>
+
+      <p class="section__eyebrow" data-reveal>05 — Contacto</p>
+      <h2 class="contact-panel__title" data-reveal data-reveal-delay="1">
+        ¿Estás interesado en<br />
+        <span class="contact-panel__title-accent">colaborar juntos?</span>
+      </h2>
+      <p class="contact-panel__text" data-reveal data-reveal-delay="2">
+        Actualmente estoy disponible para asumir nuevos proyectos, así que
+        siéntete libre de escribirme sobre cualquier idea que quieras contarme.
+      </p>
+
+      <div class="contact-panel__actions" data-reveal data-reveal-delay="3">
+        <a href={mailtoHref} class="contact-panel__cta" data-testid="contact-mailto-cta">
+          Contáctame
+          <Icon name="bx-right-arrow-alt" class="contact-panel__cta-arrow" />
+        </a>
+        <a href={mailtoHref} class="contact-panel__email" data-testid="contact-email-link">
+          {siteConfig.email}
+        </a>
+      </div>
+
+      <div class="contact-panel__links" data-reveal data-reveal-delay="4">
+        {socialLinks.map((link) => (
+          <a
+            class="contact-link"
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={link.label}
+          >
+            <Icon name={link.icon} class="contact-link__icon" />
+            <span>{link.label}</span>
+            <Icon name="bx-right-arrow-alt" class="contact-link__arrow" />
+          </a>
+        ))}
+        <a
+          class="contact-link"
+          href={siteConfig.cvPath}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Descargar CV"
+          data-testid="contact-cv-link"
+        >
+          <Icon name="bx-download" class="contact-link__icon" />
+          <span>CV</span>
+          <Icon name="bx-right-arrow-alt" class="contact-link__arrow" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-panel {
+    position: relative;
+    padding: 4.5rem 2.4rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .contact-panel__glow {
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    width: 70rem;
+    height: 36rem;
+    background: radial-gradient(ellipse, rgba(211, 115, 78, 0.12), transparent 65%);
+    pointer-events: none;
+  }
+
+  .contact-panel > :global(*):not(.contact-panel__glow) {
+    position: relative;
+  }
+
+  .contact-panel__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 5.2rem);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+    color: var(--title-color);
+    margin-block-end: 1.6rem;
+  }
+
+  .contact-panel__title-accent {
+    color: var(--primary-color);
+  }
+
+  .contact-panel__text {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    line-height: 1.75;
+    max-width: 52ch;
+    text-wrap: pretty;
+    margin-block-end: 3rem;
+  }
+
+  .contact-panel__actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-block-end: 3.5rem;
+  }
+
+  .contact-panel__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.2rem 2.8rem;
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--radius-pill);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 18px rgba(211, 115, 78, 0.3);
+    transition:
+      background-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .contact-panel__cta:hover {
+    background: #c05f3a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(211, 115, 78, 0.4);
+  }
+
+  .contact-panel__cta-arrow {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .contact-panel__cta:hover .contact-panel__cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .contact-panel__email {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgba(211, 115, 78, 0.4);
+    transition: color var(--transition-fast);
+    overflow-wrap: anywhere;
+  }
+
+  .contact-panel__email:hover {
+    color: var(--primary-color);
+  }
+
+  .contact-panel__links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    border-block-start: var(--border-subtle);
+    padding-block-start: 2.4rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: var(--surface-2);
+    border: var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-color);
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .contact-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(211, 115, 78, 0.3);
+    color: var(--title-color);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .contact-link__icon {
+    font-size: 1.8rem;
+    flex: none;
+  }
+
+  .contact-link__arrow {
+    margin-inline-start: auto;
+    font-size: 1.6rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .contact-link:hover .contact-link__arrow {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 768px) {
+    .contact-panel {
+      padding: 6.5rem 6rem;
+    }
+
+    .contact-panel__links {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 480px) and (max-width: 767px) {
+    .contact-panel__links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

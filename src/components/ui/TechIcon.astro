@@ -1,0 +1,39 @@
+---
+import type { TechName } from '@ptypes/index'
+import { getIcon } from '@icons/index'
+
+interface Props {
+  techKey: TechName
+  size?: number
+}
+
+const WEBP_ICONS = new Set([
+  'emotion_logo',
+  'mongoose_logo',
+  'styled-components',
+])
+
+const { techKey, size = 20 } = Astro.props
+const slug = getIcon(techKey)
+const extension = WEBP_ICONS.has(slug) ? 'webp' : 'svg'
+const iconSrc = `/icons/${slug}.${extension}`
+---
+
+<img
+  class="tech-icon"
+  src={iconSrc}
+  alt={techKey}
+  width={size}
+  height={size}
+  style={`width: ${size / 10}rem; height: ${size / 10}rem;`}
+  loading="lazy"
+/>
+
+<style>
+  .tech-icon {
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 0.2rem;
+  }
+</style>

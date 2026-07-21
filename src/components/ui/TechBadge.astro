@@ -1,0 +1,68 @@
+---
+import type { TechName } from '@ptypes/index'
+import TechIcon from './TechIcon.astro'
+
+interface Props {
+  name: string
+  techKey: TechName
+  colorVar?: string
+}
+
+const { name, techKey, colorVar } = Astro.props
+---
+
+<div class="skill" data-reveal style={colorVar ? `--tech-color: ${colorVar}` : undefined}>
+  <span class="skill__icon">
+    <TechIcon techKey={techKey} size={28} />
+  </span>
+  <span class="skill__name">{name}</span>
+</div>
+
+<style>
+  .skill {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1rem;
+    padding-inline: 1.2rem;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .skill:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow);
+    border-color: rgba(211, 115, 78, 0.2);
+  }
+
+  .skill__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    overflow: hidden;
+  }
+
+  .skill__name {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--title-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (min-width: 768px) {
+    .skill {
+      padding-inline: 1.4rem;
+    }
+  }
+</style>

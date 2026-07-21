@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+import BlogLayout from '../../../layouts/BlogLayout.astro'
+import BlogCard from '../../../components/blog/BlogCard.astro'
+import BlogPagination from '../../../components/blog/BlogPagination.astro'
+import { siteConfig } from '../../../data/site'
+import { sortPostsByDate, getTotalPages, paginatePosts } from '../../../utils/blog'
+
+export async function getStaticPaths() {
+  const perPage = 10
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft)
+  const sorted = sortPostsByDate(allPosts)
+  const totalPages = getTotalPages(sorted.length, perPage)
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => i + 2).map(page => ({
+    params: { page: String(page) },
+    props: {
+      pagePosts: paginatePosts(sorted, page, perPage),
+      currentPage: page,
+      totalPages,
+    },
+  }))
+}
+
+interface Props {
+  pagePosts: CollectionEntry<'blog'>[]
+  currentPage: number
+  totalPages: number
+}
+
+const { pagePosts, currentPage, totalPages } = Astro.props
+const canonical = `${siteConfig.url}/blog/page/${currentPage}`
+---
+
+<BlogLayout
+  title={`Blog — Página ${currentPage} — ${siteConfig.author}`}
+  description="Notas sobre IA, desarrollo web y herramientas para ingenieros de software."
+  canonical={canonical}
+  ogType="website"
+>
+  <section class="blog-index">
+    <div class="container">
+      <header class="blog-index__header" data-reveal>
+        <h1 class="blog-index__title">Blog</h1>
+        <p class="blog-index__lead">
+          Página {currentPage} de {totalPages}
+        </p>
+      </header>
+
+      <div class="blog-index__list">
+        {pagePosts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            excerpt={post.data.excerpt}
+            href={`/blog/${post.id}`}
+            publishedAt={post.data.publishedAt}
+            updatedAt={post.data.updatedAt}
+            category={post.data.category}
+            tags={post.data.tags}
+            cover={post.data.cover}
+            featured={post.data.featured}
+          />
+        ))}
+      </div>
+
+      <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </section>
+</BlogLayout>
+
+<style>
+.blog-index {
+  padding-block: 8rem;
+  min-height: calc(100vh - 8rem);
+}
+
+.blog-index__header {
+  max-width: 72rem;
+  margin-block-end: 4rem;
+}
+
+.blog-index__title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--title-color);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .blog-index__title {
+    font-size: 4rem;
+  }
+}
+
+.blog-index__lead {
+  font-size: 1.6rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.blog-index__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-subtle);
+}
+</style>

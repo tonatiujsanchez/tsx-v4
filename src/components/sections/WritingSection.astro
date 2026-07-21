@@ -1,0 +1,279 @@
+---
+import { getCollection } from 'astro:content'
+import Icon from '@components/ui/Icon.astro'
+
+const posts = await getCollection('blog', ({ data }) => !data.draft)
+posts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+const latest = posts[0]
+
+const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+})
+---
+
+{latest && (
+  <section class="writing-section section" id="notas" aria-labelledby="writing-title">
+    <div class="container container--wide">
+      <header class="writing-section__header">
+        <p class="section__eyebrow" data-reveal>04 — Notas recientes</p>
+        <h2 id="writing-title" class="section__title" data-reveal>Escribo lo que aprendo</h2>
+        <p class="section__description" data-reveal data-reveal-delay="1">
+          Notas técnicas sobre desarrollo, IA aplicada y herramientas de trabajo.
+        </p>
+      </header>
+
+      <a
+        class="writing-card"
+        href={`/blog/${latest.id}`}
+        aria-label={`Leer nota: ${latest.data.title}`}
+        data-reveal
+        data-testid="writing-latest-link"
+      >
+        <div class="writing-card__cover">
+          <img
+            src={latest.data.cover.src}
+            alt={latest.data.cover.alt}
+            width="1200"
+            height="675"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="writing-card__cover-frame" aria-hidden="true"></span>
+        </div>
+
+        <div class="writing-card__body">
+          <div class="writing-card__meta">
+            <span class="writing-card__badge">Última nota</span>
+            <span class="writing-card__meta-dot" aria-hidden="true"></span>
+            <span class="writing-card__category">{latest.data.category}</span>
+            <span class="writing-card__meta-dot" aria-hidden="true"></span>
+            <time class="writing-card__date" datetime={latest.data.publishedAt.toISOString()}>
+              {dateFormatter.format(latest.data.publishedAt)}
+            </time>
+          </div>
+
+          <h3 class="writing-card__title">{latest.data.title}</h3>
+          <p class="writing-card__excerpt">{latest.data.excerpt}</p>
+
+          <span class="writing-card__cta">
+            Leer nota
+            <Icon name="bx-right-arrow-alt" class="writing-card__cta-icon" />
+          </span>
+        </div>
+      </a>
+
+      <div class="writing-section__footer" data-reveal>
+        <a class="writing-section__all" href="/blog" data-testid="writing-all-link">
+          Ver todas las notas
+          <Icon name="bx-right-arrow-alt" class="writing-section__all-icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .writing-section__header {
+    margin-block-end: 3.6rem;
+  }
+
+  .section__description {
+    max-width: 58ch;
+  }
+
+  .writing-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    position: relative;
+    background: var(--surface-1);
+    border: var(--card-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .writing-card:hover,
+  .writing-card:focus-visible {
+    border-color: rgba(211, 115, 78, 0.35);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+
+  .writing-card__cover {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .writing-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-emphasized);
+  }
+
+  .writing-card:hover .writing-card__cover img,
+  .writing-card:focus-visible .writing-card__cover img {
+    transform: scale(1.03);
+  }
+
+  .writing-card__cover-frame {
+    position: absolute;
+    inset: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    pointer-events: none;
+  }
+
+  .writing-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem;
+  }
+
+  .writing-card__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .writing-card__badge {
+    font-family: var(--font-display);
+    color: var(--primary-color);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+
+  .writing-card__meta-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  .writing-card__category {
+    color: var(--text-color);
+  }
+
+  .writing-card__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 3.6vw, 3rem);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--title-color);
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+
+  .writing-card:hover .writing-card__title,
+  .writing-card:focus-visible .writing-card__title {
+    color: var(--primary-color);
+  }
+
+  .writing-card__excerpt {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: var(--text-color);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+
+  .writing-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-block-start: 0.4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .writing-card__cta-icon {
+    font-size: 1.8rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .writing-card:hover .writing-card__cta-icon,
+  .writing-card:focus-visible .writing-card__cta-icon {
+    transform: translateX(4px);
+  }
+
+  .writing-section__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: 2.4rem;
+  }
+
+  .writing-section__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-color);
+    padding-block: 0.4rem;
+    border-block-end: 1px solid transparent;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .writing-section__all:hover,
+  .writing-section__all:focus-visible {
+    color: var(--primary-color);
+    border-block-end-color: rgba(211, 115, 78, 0.4);
+  }
+
+  .writing-section__all-icon {
+    font-size: 1.6rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .writing-section__all:hover .writing-section__all-icon,
+  .writing-section__all:focus-visible .writing-section__all-icon {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 900px) {
+    .writing-card {
+      grid-template-columns: 1.05fr 1fr;
+    }
+
+    .writing-card__cover {
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 32rem;
+    }
+
+    .writing-card__body {
+      padding: 3.6rem 3.6rem 3.2rem;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .writing-card,
+    .writing-card__cover img,
+    .writing-card__cta-icon,
+    .writing-section__all-icon {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>

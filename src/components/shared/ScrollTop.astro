@@ -1,0 +1,17 @@
+---
+import Icon from '../ui/Icon.astro'
+---
+
+<button
+  id="scroll-top"
+  type="button"
+  aria-label="Volver arriba"
+  class="scroll-top"
+>
+  <Icon name="bx-up-arrow-alt" />
+</button>
+
+<script>
+  import { initScrollTop } from '@scripts/scroll'
+  document.addEventListener('astro:page-load', initScrollTop)
+</script>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  tag: string
+  href?: string
+}
+
+const { tag, href } = Astro.props
+---
+
+{href
+  ? <a href={href} class="tag-pill">{tag}</a>
+  : <span class="tag-pill">{tag}</span>
+}
+
+<style>
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: var(--transition-fast);
+  text-decoration: none;
+}
+
+a.tag-pill:hover,
+a.tag-pill:focus-visible {
+  background: var(--surface-elevated);
+  border-color: var(--border-normal);
+  color: var(--text-color);
+}
+</style>

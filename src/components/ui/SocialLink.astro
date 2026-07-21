@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro'
+
+interface Props {
+  href: string
+  label: string
+  icon: string
+  ariaLabel?: string
+}
+
+const { href, label, icon, ariaLabel } = Astro.props
+---
+
+<a
+  class="social-link"
+  href={href}
+  aria-label={ariaLabel ?? label}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <span class="social-link__name">
+    <Icon name={icon} class="social-link__icon" />
+    <span class="social-link__label">{label}</span>
+  </span>
+  <Icon name="bx-right-arrow-alt" class="social-link__arrow" />
+</a>
+
+<style>
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .social-link__name {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+</style>
