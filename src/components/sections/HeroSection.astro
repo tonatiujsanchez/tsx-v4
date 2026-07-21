@@ -16,13 +16,11 @@ import Icon from '../ui/Icon.astro'
             class="hero__avatar"
             src="/img/profile/tsj.webp"
             alt={`Foto de perfil de ${siteConfig.author}`}
-            width="44"
-            height="44"
+            width="64"
+            height="64"
             loading="eager"
             fetchpriority="high"
           />
-          <span class="hero__status-dot" aria-hidden="true"></span>
-          <span class="hero__status-text">Disponible para nuevos proyectos</span>
         </div>
 
         <div class="hero__intro" data-reveal data-reveal-delay="1">
@@ -156,16 +154,16 @@ import Icon from '../ui/Icon.astro'
     align-items: center;
     gap: 1rem;
     align-self: flex-start;
-    padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     background: var(--surface-1);
     border: var(--card-border);
-    border-radius: var(--radius-pill);
+    border-radius: 50%;
     box-shadow: var(--shadow-soft);
   }
 
   .hero__avatar {
-    width: 3.4rem;
-    height: 3.4rem;
+    width: 7.4rem;
+    height: 7.4rem;
     border-radius: 50%;
     object-fit: cover;
     object-position: center top;
