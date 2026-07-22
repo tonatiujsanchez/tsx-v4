@@ -139,7 +139,8 @@ const jsonLd = {
 <style>
   .about {
     position: relative;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     padding-block: 3rem 6rem;
   }
 
@@ -516,6 +517,8 @@ const jsonLd = {
     .about__portrait-column {
       position: sticky;
       inset-block-start: 8rem;
+      align-self: start;
+      height: max-content;
     }
 
     .about__portrait-vline {
