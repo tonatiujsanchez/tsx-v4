@@ -20,12 +20,12 @@ const positions: Array<{ left: number; top: number; rotate: number }> = [
 <div class="gallery" data-gallery data-testid="about-gallery">
   <div class="gallery__header">
     <div class="gallery__meta">
-      <span class="gallery__label">Signal Photo Desk</span>
+      <span class="gallery__label">Momentos</span>
       <span class="gallery__count">{String(galleryPhotos.length).padStart(2, '0')} escenas</span>
     </div>
     <button type="button" class="gallery__reset" data-gallery-reset data-testid="about-gallery-reset">
       <Icon name="bx-refresh" class="gallery__reset-icon" />
-      <span>Reordenar</span>
+      <span>Restablecer</span>
     </button>
   </div>
 
@@ -63,7 +63,7 @@ const positions: Array<{ left: number; top: number; rotate: number }> = [
 
   <p class="gallery__hint" aria-hidden="true">
     <span class="gallery__hint-dot"></span>
-    <span class="gallery__hint-text">Arrastra las tarjetas dentro del panel</span>
+    <span class="gallery__hint-text">Arrastra las fotos para acomodarlas a tu manera</span>
   </p>
 </div>
 
