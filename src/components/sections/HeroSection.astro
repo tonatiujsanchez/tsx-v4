@@ -370,6 +370,12 @@ import Icon from '../ui/Icon.astro'
     width: 100% !important;
     height: 100% !important;
     z-index: 1;
+    opacity: 0;
+    transition: opacity 500ms var(--ease-standard);
+  }
+
+  .hero-scene--ready :global(.hero-scene__canvas) {
+    opacity: 1;
   }
 
   /* Static fallback */

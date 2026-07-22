@@ -1,4 +1,6 @@
 // TSX Signal Core — single Three.js hero scene with full lifecycle management
+const SCENE_REVEAL_DELAY_MS = 500
+
 let registered = false
 let cleanup: (() => void) | null = null
 let initializing = false
@@ -28,6 +30,7 @@ async function init(): Promise<void> {
 
   const tilt = new THREE.Group()
   const group = new THREE.Group()
+  group.scale.setScalar(0.5)
   tilt.add(group)
   scene.add(tilt)
 
@@ -111,7 +114,6 @@ async function init(): Promise<void> {
   renderer.domElement.setAttribute('aria-hidden', 'true')
   renderer.domElement.classList.add('hero-scene__canvas')
   mount.appendChild(renderer.domElement)
-  mount.classList.add('hero-scene--ready')
   setSize()
 
   let raf = 0
@@ -121,7 +123,9 @@ async function init(): Promise<void> {
   let targetRY = 0
   let scrollT = 0
   let elapsed = 0
-  const timer = new THREE.Timer() 
+  let revealed = false
+  let revealTimer: number | null = null
+  const timer = new THREE.Timer()
 
   const animate = (timestamp: number): void => {
     if (!running) return
@@ -166,7 +170,7 @@ async function init(): Promise<void> {
   }
 
   const start = (): void => {
-    if (running) return
+    if (!revealed || running) return
 
     running = true
     timer.reset()
@@ -206,10 +210,28 @@ async function init(): Promise<void> {
   document.addEventListener('visibilitychange', onVisibility)
   window.addEventListener('resize', setSize)
 
-  start()
+  revealTimer = window.setTimeout(() => {
+    revealTimer = null
+
+    if (!mount.isConnected) return
+
+    revealed = true
+    mount.classList.add('hero-scene--ready')
+
+    if (visible && !document.hidden) {
+      start()
+    }
+  }, SCENE_REVEAL_DELAY_MS)
+
   initializing = false
 
   cleanup = () => {
+    if (revealTimer !== null) {
+      window.clearTimeout(revealTimer)
+      revealTimer = null
+    }
+    revealed = false
+
     stop()
     io.disconnect()
     window.removeEventListener('pointermove', onPointer)
