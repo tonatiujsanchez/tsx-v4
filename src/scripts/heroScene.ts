@@ -19,6 +19,7 @@ async function init(): Promise<void> {
   const primary = new THREE.Color('#D3734E')
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
+  renderer.setClearColor(0x000000, 0)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
 
   const scene = new THREE.Scene()
@@ -134,7 +135,7 @@ async function init(): Promise<void> {
     const t = Math.min(elapsed / 1.5, 1)
     const ease = 1 - Math.pow(1 - t, 3)
 
-    group.scale.setScalar(0.5 + 0.5 * ease)
+    group.scale.setScalar(0.5 + 0.3 * ease)
     wireMat.opacity = 0.34 * ease
     nodeMat.opacity = 0.85 * ease
     particleMat.opacity = 0.55 * ease

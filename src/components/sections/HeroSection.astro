@@ -332,16 +332,36 @@ import Icon from '../ui/Icon.astro'
 
   /* ── Scene ── */
   .hero__scene {
+    position: relative;
     width: 100%;
+    min-width: 0;
+    overflow: visible;
   }
 
   .hero-scene {
+    --scene-mask: radial-gradient(
+      ellipse 86% 80% at 54% 50%,
+      black 0%,
+      black 58%,
+      rgba(0, 0, 0, 0.88) 72%,
+      transparent 100%
+    );
+
     position: relative;
-    width: 100%;
+    width: calc(100% + 16rem);
     height: 30rem;
+    margin-inline: -8rem;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    -webkit-mask-image: var(--scene-mask);
+    mask-image: var(--scene-mask);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
   }
 
   .hero-scene :global(.hero-scene__canvas) {
@@ -415,7 +435,9 @@ import Icon from '../ui/Icon.astro'
     }
 
     .hero-scene {
-      height: 52rem;
+      width: calc(100% + 18rem);
+      height: 62rem;
+      margin-inline: -9rem;
     }
   }
 
