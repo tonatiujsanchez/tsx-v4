@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
     url: 'https://tonatiujsanchez.com',
     siteName: 'Tonatiuj Sánchez Portfolio',
     locale: 'es_MX',
-    defaultOgImage: '/img/profile/tsj.webp',
+    defaultOgImage: '/img/og/default.png',
     twitterHandle: '@tonatiujsanchez',
     keywords: 'desarrollador fullstack, Next.js, Node.js, TypeScript, React, MongoDB, PostgreSQL, JavaScript',
 };
