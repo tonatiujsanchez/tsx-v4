@@ -28,9 +28,12 @@ const year = new Date().getFullYear()
         ))}
       </ul>
     </div>
-    <p class="footer__copy">
-      &copy; {year} {siteConfig.author}. Todos los derechos reservados.
-    </p>
+    <div class="footer__legal">
+      <p class="footer__copy">
+        &copy; {year} {siteConfig.author}. Todos los derechos reservados.
+      </p>
+      <a href="/privacidad" class="footer__legal-link">Privacidad</a>
+    </div>
   </div>
 </footer>
 
@@ -93,8 +96,26 @@ const year = new Date().getFullYear()
     background: var(--surface-2);
   }
 
+  .footer__legal {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+  }
+
   .footer__copy {
     font-size: 1.3rem;
     color: var(--text-muted);
+  }
+
+  .footer__legal-link {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__legal-link:hover {
+    color: var(--primary-color);
   }
 </style>

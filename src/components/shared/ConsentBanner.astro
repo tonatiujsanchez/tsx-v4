@@ -1,0 +1,204 @@
+---
+/**
+ * Aviso de analítica (Basic Consent Mode).
+ *
+ * Se renderiza siempre con el atributo `hidden`, de modo que el HTML inicial no
+ * ocupa espacio ni provoca layout shift. Solo el script lo revela, y únicamente
+ * cuando Analytics está habilitado para el entorno y la decisión es `undecided`.
+ */
+---
+
+<div
+  id="ga-consent-banner"
+  class="consent"
+  role="region"
+  aria-label="Preferencias de analítica"
+  hidden
+>
+  <div class="consent__panel">
+    <p class="consent__text">
+      Este sitio utiliza analítica, solo con tu permiso, para entender qué contenido se consulta y
+      mejorar el portafolio. No utilizo publicidad ni remarketing.
+    </p>
+
+    <div class="consent__actions">
+      <button id="ga-consent-deny" type="button" class="consent__btn consent__btn--ghost">
+        Rechazar
+      </button>
+      <button id="ga-consent-accept" type="button" class="consent__btn consent__btn--primary">
+        Aceptar analítica
+      </button>
+      <a href="/privacidad" class="consent__link">Aviso de privacidad</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { readConsent, isAnalyticsEnabled, grantConsent, denyConsent } from '@scripts/analytics'
+
+  function initConsentBanner(): void {
+    const banner = document.getElementById('ga-consent-banner')
+    if (!banner) return
+
+    if (!isAnalyticsEnabled() || readConsent() !== 'undecided') {
+      banner.hidden = true
+      return
+    }
+
+    // Tras un swap de ClientRouter el nodo es nuevo; el flag evita re-enlazar
+    // el mismo elemento si esta función llegara a ejecutarse dos veces.
+    if (banner.dataset.consentBound !== 'true') {
+      banner.dataset.consentBound = 'true'
+
+      const accept = document.getElementById('ga-consent-accept')
+      const deny = document.getElementById('ga-consent-deny')
+
+      accept?.addEventListener('click', () => {
+        grantConsent()
+        banner.hidden = true
+      })
+
+      deny?.addEventListener('click', () => {
+        denyConsent()
+        banner.hidden = true
+      })
+    }
+
+    banner.hidden = false
+  }
+
+  document.addEventListener('astro:page-load', initConsentBanner)
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: 60;
+    padding-inline: max(1.6rem, env(safe-area-inset-left), env(safe-area-inset-right));
+    padding-block-end: max(1.6rem, env(safe-area-inset-bottom));
+    padding-block-start: 1.6rem;
+    pointer-events: none;
+  }
+
+  /* El atributo `hidden` debe ganarle al `display` del panel. */
+  .consent[hidden] {
+    display: none;
+  }
+
+  .consent__panel {
+    pointer-events: auto;
+    max-width: 104rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 1.8rem;
+    background: var(--surface-elevated);
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-strong);
+  }
+
+  .consent__text {
+    font-size: 1.35rem;
+    line-height: 1.65;
+    color: var(--text-color);
+    text-wrap: pretty;
+    margin: 0;
+  }
+
+  .consent__actions {
+    display: flex;
+    /* `stretch` iguala la altura de Rechazar y Aceptar aunque una etiqueta
+       ocupe dos líneas en pantallas estrechas. */
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* Rechazar y Aceptar comparten caja, tipografía y jerarquía de lectura.
+     `flex: 1 1 0` les da exactamente el mismo ancho en móvil. */
+  .consent__btn {
+    flex: 1 1 0;
+    min-height: 4.4rem;
+    padding: 1.1rem 2rem;
+    font-family: var(--font-primary);
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.2;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .consent__btn--ghost {
+    color: var(--title-color);
+    background: transparent;
+    border: var(--border-normal);
+  }
+
+  .consent__btn--ghost:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.4);
+  }
+
+  .consent__btn--primary {
+    color: #fff;
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+  }
+
+  .consent__btn--primary:hover {
+    background: #c05f3a;
+  }
+
+  .consent__link {
+    flex: 1 1 100%;
+    align-self: center;
+    text-align: center;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+    transition: color var(--transition-fast);
+  }
+
+  .consent__link:hover {
+    color: var(--primary-color);
+  }
+
+  @media (min-width: 700px) {
+    .consent__panel {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2.4rem;
+      padding: 1.8rem 2.4rem;
+    }
+
+    .consent__text {
+      max-width: 62ch;
+    }
+
+    .consent__actions {
+      flex-wrap: nowrap;
+      flex: none;
+    }
+
+    .consent__btn {
+      flex: none;
+      white-space: nowrap;
+    }
+
+    .consent__link {
+      flex: none;
+      margin-inline-start: 0.4rem;
+      white-space: nowrap;
+    }
+  }
+</style>

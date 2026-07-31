@@ -41,6 +41,7 @@ export const GET: APIRoute = async () => {
       changefreq: 'weekly',
       priority: '0.7',
     })),
+    { path: '/privacidad', changefreq: 'yearly', priority: '0.3' },
   ]
 
   const seen = new Set<string>()
