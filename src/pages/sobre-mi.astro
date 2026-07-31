@@ -15,7 +15,7 @@ const jsonLd = {
   url: `${siteConfig.url}/sobre-mi`,
   jobTitle: siteConfig.role,
   description,
-  sameAs: socialLinks.map((l) => l.href),
+  sameAs: [...socialLinks.map((l) => l.href), 'https://x.com/tonatiujsanchez'],
 }
 ---
 

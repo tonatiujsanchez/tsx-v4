@@ -16,7 +16,7 @@ const jsonLd = [
     url: siteConfig.url,
     jobTitle: siteConfig.role,
     description: siteConfig.description,
-    sameAs: socialLinks.map((l) => l.href),
+    sameAs: [...socialLinks.map((l) => l.href), 'https://x.com/tonatiujsanchez'],
   },
   {
     '@context': 'https://schema.org',

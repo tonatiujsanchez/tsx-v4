@@ -10,10 +10,11 @@ interface Props {
   canonical?: string
   ogImage?: string
   ogType?: 'website' | 'article'
+  robots?: string
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
 }
 
-const { title, description, canonical, ogImage, ogType = 'article', jsonLd } = Astro.props
+const { title, description, canonical, ogImage, ogType = 'article', robots, jsonLd } = Astro.props
 ---
 
 <BaseLayout
@@ -22,6 +23,7 @@ const { title, description, canonical, ogImage, ogType = 'article', jsonLd } = A
   canonical={canonical}
   ogImage={ogImage}
   ogType={ogType}
+  robots={robots}
   jsonLd={jsonLd}
 >
   <Navbar variant="home" />
