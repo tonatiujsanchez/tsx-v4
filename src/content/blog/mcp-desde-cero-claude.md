@@ -2,7 +2,7 @@
 title: "MCP desde cero: qué es, cómo funciona y para qué sirve en Claude"
 description: "Una guía clara para entender qué es Model Context Protocol, cómo conecta Claude con herramientas y datos externos, y cuándo conviene utilizarlo."
 excerpt: "MCP permite conectar Claude con archivos, APIs, bases de datos y otras herramientas. En esta guía explico desde cero cómo funciona y para qué puede servirte."
-publishedAt: 2026-07-31
+publishedAt: 2026-06-04
 category: "tutoriales"
 cover:
   src: "/img/blog/mcp-desde-cero-claude/cover.webp"
