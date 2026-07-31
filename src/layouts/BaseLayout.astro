@@ -1,6 +1,7 @@
 ---
 import { siteConfig, canonicalUrl } from '@data/site'
 import { ClientRouter } from 'astro:transitions'
+import ConsentBanner from '@components/shared/ConsentBanner.astro'
 import '@styles/globals.css'
 
 interface Props {
@@ -101,6 +102,7 @@ const robotsContent = robots ?? (noindex ? 'noindex, nofollow' : 'index, follow'
   </head>
   <body>
     <slot />
+    <ConsentBanner />
     <script>
       import { initAnimations } from '@scripts/animations'
       document.addEventListener('astro:page-load', initAnimations)

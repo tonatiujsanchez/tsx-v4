@@ -1,0 +1,218 @@
+---
+import MainLayout from '@layouts/MainLayout.astro'
+import { siteConfig } from '@data/site'
+
+const title = 'Aviso de privacidad | Tonatiuj Sánchez'
+const description =
+  'Cómo se utiliza Google Analytics en tonatiujsanchez.com y qué control tienes sobre la medición.'
+
+const mailtoHref = `mailto:${siteConfig.email}?subject=Consulta%20sobre%20privacidad`
+---
+
+<MainLayout title={title} description={description} canonical="/privacidad">
+  <main class="legal">
+    <div class="legal__container container">
+      <header class="legal__head">
+        <p class="section__eyebrow">Privacidad</p>
+        <h1 class="legal__title">Aviso de privacidad</h1>
+        <p class="legal__lead">
+          Este aviso explica cómo se utiliza Google Analytics en tonatiujsanchez.com y qué control
+          tienes sobre la medición.
+        </p>
+      </header>
+
+      <section class="legal__section" aria-labelledby="responsable">
+        <h2 id="responsable" class="legal__section-title">1. Responsable</h2>
+        <p class="legal__text">
+          Tonatiuj Sánchez Jiménez es responsable de este sitio y de la medición analítica descrita
+          aquí.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="informacion">
+        <h2 id="informacion" class="legal__section-title">2. Información recopilada</h2>
+        <p class="legal__text">
+          Google Analytics puede registrar, después de tu consentimiento:
+        </p>
+        <ul class="legal__list" role="list">
+          <li>Páginas visitadas y título de la página.</li>
+          <li>Fuente o sitio de referencia.</li>
+          <li>Tipo de dispositivo, navegador y sistema operativo.</li>
+          <li>Ubicación geográfica aproximada.</li>
+          <li>Desplazamientos, clics salientes y descargas de archivos.</li>
+        </ul>
+        <p class="legal__text">
+          No se envían a Analytics nombres, correos, teléfonos ni el contenido de mensajes.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="finalidad">
+        <h2 id="finalidad" class="legal__section-title">3. Finalidad</h2>
+        <p class="legal__text">
+          La información se utiliza para conocer qué contenido resulta útil, detectar problemas de
+          navegación y mejorar el portafolio.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="google-analytics">
+        <h2 id="google-analytics" class="legal__section-title">4. Google Analytics</h2>
+        <p class="legal__text">
+          El sitio utiliza Google Analytics 4. La etiqueta solo se carga después de que aceptas la
+          analítica. No se utiliza Google Ads, remarketing, personalización publicitaria ni User ID.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="consentimiento">
+        <h2 id="consentimiento" class="legal__section-title">5. Consentimiento</h2>
+        <p class="legal__text">
+          Puedes aceptar o rechazar la analítica desde el aviso mostrado en el sitio. Tu decisión se
+          guarda localmente en tu navegador.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="cambiar">
+        <h2 id="cambiar" class="legal__section-title">6. Cambiar la decisión</h2>
+        <p class="legal__text">
+          Puedes revocar o modificar tu elección en cualquier momento. Al hacerlo se borra la
+          decisión guardada, se detiene la medición en curso y el aviso vuelve a mostrarse. Tus
+          demás preferencias, como el tema, no se modifican.
+        </p>
+        <button id="ga-consent-reset" type="button" class="legal__btn">
+          Cambiar preferencia de analítica
+        </button>
+      </section>
+
+      <section class="legal__section" aria-labelledby="contacto">
+        <h2 id="contacto" class="legal__section-title">7. Contacto</h2>
+        <p class="legal__text">
+          Para consultas relacionadas con privacidad puedes escribir a
+          <a href={mailtoHref} class="legal__link">{siteConfig.email}</a>.
+        </p>
+      </section>
+
+      <section class="legal__section" aria-labelledby="actualizacion">
+        <h2 id="actualizacion" class="legal__section-title">8. Actualización</h2>
+        <p class="legal__text">Última actualización: julio de 2026.</p>
+      </section>
+    </div>
+  </main>
+</MainLayout>
+
+<script>
+  import { resetConsent } from '@scripts/analytics'
+
+  function initConsentReset(): void {
+    const button = document.getElementById('ga-consent-reset')
+    if (!button) return
+    if (button.dataset.resetBound === 'true') return
+    button.dataset.resetBound = 'true'
+
+    button.addEventListener('click', () => {
+      resetConsent()
+      // Recarga completa para reconstruir el estado y volver a mostrar el aviso.
+      window.location.reload()
+    })
+  }
+
+  document.addEventListener('astro:page-load', initConsentReset)
+</script>
+
+<style>
+  .legal {
+    padding-block: 4rem 6rem;
+  }
+
+  .legal__head {
+    margin-block-end: 3.2rem;
+  }
+
+  .legal__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 4.6rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--title-color);
+    margin-block-end: 1.4rem;
+  }
+
+  .legal__lead {
+    font-size: 1.6rem;
+    line-height: 1.7;
+    color: var(--text-color);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+
+  .legal__section {
+    padding-block-start: 2.8rem;
+    border-block-start: var(--border-subtle);
+    margin-block-start: 2.8rem;
+  }
+
+  .legal__section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-block-end: 1.2rem;
+  }
+
+  .legal__text {
+    font-size: 1.5rem;
+    line-height: 1.75;
+    color: var(--text-color);
+    max-width: 68ch;
+    text-wrap: pretty;
+  }
+
+  .legal__text + .legal__text {
+    margin-block-start: 1.2rem;
+  }
+
+  .legal__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-block: 1.2rem;
+    padding-inline-start: 2rem;
+    list-style: disc;
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: var(--text-color);
+  }
+
+  .legal__link {
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+  }
+
+  .legal__btn {
+    margin-block-start: 1.8rem;
+    min-height: 4.4rem;
+    padding: 1.1rem 2rem;
+    font-family: var(--font-primary);
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--title-color);
+    background: transparent;
+    border: var(--border-normal);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .legal__btn:hover {
+    color: var(--primary-color);
+    border-color: rgba(211, 115, 78, 0.4);
+  }
+
+  @media (min-width: 900px) {
+    .legal {
+      padding-block: 6rem 8rem;
+    }
+  }
+</style>
