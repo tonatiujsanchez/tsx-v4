@@ -8,7 +8,7 @@ cover:
   src: "/img/blog/rag-desde-cero-como-funciona/cover.webp"
   alt: "Flujo de un sistema RAG que busca información en documentos antes de responder"
   caption: "Un sistema RAG recupera información relevante y la entrega al modelo como contexto antes de generar una respuesta."
-draft: true
+draft: false
 tags:
   - "rag"
   - "llm"
@@ -17,6 +17,7 @@ tags:
   - "bases-de-datos-vectoriales"
 author: "Tonatiuj Sánchez"
 featured: false
+ogImage: "/img/blog/rag-desde-cero-como-funciona/og.jpg"
 ---
 
 Cuando alguien comienza a trabajar con modelos de lenguaje, es fácil pensar que el modelo ya conoce toda la información que necesitamos.

@@ -8,7 +8,7 @@ cover:
   src: "/img/blog/mcp-desde-cero-claude/cover.webp"
   alt: "Claude conectado mediante MCP con herramientas, archivos, APIs y bases de datos"
   caption: "MCP crea una forma estandarizada de conectar aplicaciones de IA con sistemas externos."
-draft: true
+draft: false
 tags:
   - "mcp"
   - "claude"
@@ -17,6 +17,7 @@ tags:
   - "herramientas"
 author: "Tonatiuj Sánchez"
 featured: false
+ogImage: "/img/blog/mcp-desde-cero-claude/og.jpg"
 ---
 
 Si has utilizado Claude o Claude Code recientemente, probablemente ya encontraste las siglas **MCP** en alguna configuración, herramienta o documentación.

@@ -8,7 +8,7 @@ cover:
   src: "/img/blog/agentes-ia-desde-cero/cover.webp"
   alt: "Agente de inteligencia artificial conectado con herramientas, memoria y sistemas externos"
   caption: "Un agente combina un modelo de lenguaje con herramientas, contexto, reglas y un ciclo de decisión."
-draft: true
+draft: false
 tags:
   - "agentes-de-ia"
   - "claude"
@@ -17,6 +17,7 @@ tags:
   - "automatizacion"
 author: "Tonatiuj Sánchez"
 featured: false
+ogImage: "/img/blog/agentes-ia-desde-cero/og.jpg"
 ---
 
 Durante los últimos meses, la palabra **agente** empezó a aparecer en prácticamente cualquier producto de inteligencia artificial.
