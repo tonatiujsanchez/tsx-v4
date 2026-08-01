@@ -31,7 +31,10 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', {
         data-reveal
         data-testid="writing-latest-link"
       >
-        <div class="writing-card__cover">
+        <div
+          class="writing-card__cover"
+          style={`--featured-cover: url("${latest.data.cover.src}")`}
+        >
           <img
             src={latest.data.cover.src}
             alt={latest.data.cover.alt}
@@ -114,10 +117,26 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', {
     overflow: hidden;
   }
 
+  .writing-card__cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--featured-cover);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(24px) brightness(0.42) saturate(0.85);
+    transform: scale(1.2);
+    pointer-events: none;
+  }
+
   .writing-card__cover img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
     transition: transform 500ms var(--ease-emphasized);
   }
 
@@ -128,6 +147,7 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', {
 
   .writing-card__cover-frame {
     position: absolute;
+    z-index: 2;
     inset: 1.2rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-md);
