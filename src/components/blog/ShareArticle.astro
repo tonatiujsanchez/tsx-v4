@@ -1,0 +1,178 @@
+---
+/**
+ * Acciones para compartir el artículo.
+ *
+ * Las tres redes son enlaces reales construidos en el servidor, así que
+ * funcionan con JavaScript deshabilitado. `share.ts` solo añade la analítica y
+ * la copia al portapapeles mediante delegación en `document`.
+ */
+import Icon from '../ui/Icon.astro'
+
+interface Props {
+  title: string
+  slug: string
+  url: string
+}
+
+const { title, slug, url } = Astro.props
+
+const encodedUrl = encodeURIComponent(url)
+const encodedTitle = encodeURIComponent(title)
+
+const socialLinks = [
+  {
+    network: 'linkedin',
+    label: 'LinkedIn',
+    ariaLabel: 'Compartir en LinkedIn',
+    icon: 'bxl-linkedin-square',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+  },
+  {
+    network: 'facebook',
+    label: 'Facebook',
+    ariaLabel: 'Compartir en Facebook',
+    icon: 'bxl-facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+  {
+    network: 'x',
+    label: 'X',
+    ariaLabel: 'Compartir en X',
+    icon: 'bxl-twitter',
+    href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}&via=tonatiujsanchez`,
+  },
+]
+---
+
+<section class="share" aria-labelledby="share-heading" data-share-root>
+  <h2 class="share__heading" id="share-heading">¿Te sirvió este artículo? Compártelo.</h2>
+
+  <div class="share__actions">
+    {socialLinks.map(link => (
+      <a
+        class="share__btn"
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={link.ariaLabel}
+        data-share
+        data-share-network={link.network}
+        data-share-slug={slug}
+        data-share-url={url}
+      >
+        <Icon name={link.icon} class="share__icon" />
+        <span class="share__label">{link.label}</span>
+      </a>
+    ))}
+
+    <button
+      class="share__btn"
+      type="button"
+      aria-label="Copiar enlace del artículo"
+      data-share
+      data-share-network="copy"
+      data-share-slug={slug}
+      data-share-url={url}
+    >
+      <Icon name="bx-link" class="share__icon" />
+      <span class="share__label">Copiar enlace</span>
+    </button>
+  </div>
+
+  <p class="share__feedback" role="status" aria-live="polite" data-share-feedback></p>
+</section>
+
+<script>
+  import '@scripts/share'
+</script>
+
+<style>
+.share {
+  max-width: 70rem;
+  margin: 6rem auto 0;
+  padding-block-start: 4rem;
+  border-block-start: var(--border-subtle);
+}
+
+.share__heading {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 2rem;
+}
+
+.share__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.share__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  padding: 0.9rem 1.6rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-color);
+  background: var(--surface-1);
+  border: var(--card-border);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.share__btn:hover {
+  color: var(--primary-color);
+  background: var(--surface-2);
+  border-color: var(--primary-color-alpha);
+}
+
+.share__btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+.share__icon {
+  font-size: 1.7rem;
+  flex-shrink: 0;
+}
+
+.share__label {
+  white-space: nowrap;
+}
+
+.share__feedback {
+  min-height: 1.9rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.3rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.share__feedback[data-state='success'] {
+  color: var(--primary-color);
+}
+
+@media (max-width: 24em) {
+  .share__btn {
+    padding: 0.8rem 1.3rem;
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share__btn {
+    transition: none;
+  }
+}
+</style>

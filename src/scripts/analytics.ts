@@ -43,11 +43,25 @@ interface PageViewParams {
   debug_mode?: boolean
 }
 
+/** Redes soportadas por la sección de compartir del blog. */
+export type ShareNetwork = 'linkedin' | 'facebook' | 'x' | 'copy'
+
+/**
+ * Solo identificadores del contenido. Nunca el título, la URL completa ni
+ * ningún dato que pueda identificar a la persona que comparte.
+ */
+interface ShareArticleParams {
+  article_slug: string
+  share_network: ShareNetwork
+  debug_mode?: boolean
+}
+
 interface GtagFn {
   (command: 'js', value: Date): void
   (command: 'consent', action: 'default' | 'update', params: Partial<ConsentParams>): void
   (command: 'config', measurementId: string, params: ConfigParams): void
   (command: 'event', eventName: 'page_view', params: PageViewParams): void
+  (command: 'event', eventName: 'share_article', params: ShareArticleParams): void
 }
 
 declare global {
@@ -345,6 +359,31 @@ export function sendPageView(): void {
   }
 
   gtag('event', 'page_view', params)
+}
+
+/**
+ * Registra la intención de compartir un artículo. Comparte las mismas guardias
+ * que `sendPageView()`: sin Measurement ID, en local sin modo debug, sin
+ * consentimiento `granted` o sin GA inicializado, la función es un no-op y no
+ * deja nada encolado en `dataLayer` para enviarse más tarde.
+ */
+export function trackShareArticle(articleSlug: string, shareNetwork: ShareNetwork): void {
+  if (!isAnalyticsEnabled()) return
+  if (readConsent() !== 'granted') return
+  if (!window.__gaInitialized) return
+
+  const gtag = window.gtag
+  if (typeof gtag !== 'function') return
+
+  const params: ShareArticleParams = {
+    article_slug: articleSlug,
+    share_network: shareNetwork,
+  }
+  if (isDebugMode()) {
+    params.debug_mode = true
+  }
+
+  gtag('event', 'share_article', params)
 }
 
 /** Acepta: persiste, carga GA4 y envía el page_view de la vista actual. */

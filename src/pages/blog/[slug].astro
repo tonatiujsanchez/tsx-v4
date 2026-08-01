@@ -4,7 +4,8 @@ import type { CollectionEntry } from 'astro:content'
 import BlogLayout from '../../layouts/BlogLayout.astro'
 import PostHeader from '../../components/blog/PostHeader.astro'
 import RelatedPosts from '../../components/blog/RelatedPosts.astro'
-import { siteConfig } from '../../data/site'
+import ShareArticle from '../../components/blog/ShareArticle.astro'
+import { siteConfig, canonicalUrl } from '../../data/site'
 import { getRelatedPosts } from '../../utils/blog'
 
 export async function getStaticPaths() {
@@ -38,6 +39,8 @@ const {
 } = post.data
 
 const canonical = postCanonical ?? `${siteConfig.url}/blog/${post.id}`
+/** Misma URL absoluta que el `<link rel="canonical">` del documento. */
+const shareUrl = canonicalUrl(canonical)
 const ogImageUrl = ogImage ?? cover?.src
 
 const related = getRelatedPosts(post.id, allPosts).map(p => ({
@@ -87,6 +90,9 @@ const jsonLd = {
     />
     <div class="post-content container">
       <Content />
+    </div>
+    <div class="container">
+      <ShareArticle title={title} slug={post.id} url={shareUrl} />
     </div>
     <div class="container">
       <RelatedPosts posts={related} />
