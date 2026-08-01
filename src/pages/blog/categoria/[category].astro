@@ -43,6 +43,18 @@ const CATEGORY_LABELS: Record<string, string> = {
 const label = CATEGORY_LABELS[category] ?? category
 const canonical = `${siteConfig.url}/blog/categoria/${category}`
 const description = `Artículos sobre ${label} — ${siteConfig.author}`
+
+/**
+ * Una categoría solo se indexa cuando reúne suficientes artículos publicados
+ * para aportar valor propio frente a `/blog`. Debajo del umbral sigue en
+ * `noindex,follow`: el listado se rastrea, pero no compite en el índice.
+ * El mismo umbral decide su presencia en `sitemap.xml.ts`.
+ */
+const MIN_POSTS_TO_INDEX = 3
+
+// En dev `posts` también trae borradores; solo cuentan los publicados.
+const publishedCount = posts.filter(p => !p.data.draft).length
+const robots = publishedCount >= MIN_POSTS_TO_INDEX ? 'index,follow' : 'noindex,follow'
 ---
 
 <BlogLayout
@@ -50,7 +62,7 @@ const description = `Artículos sobre ${label} — ${siteConfig.author}`
   description={description}
   canonical={canonical}
   ogType="website"
-  robots="noindex,follow"
+  robots={robots}
 >
   <section class="category-page">
     <div class="container">
