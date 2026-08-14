@@ -1,5 +1,5 @@
 // TSX Signal Core — single Three.js hero scene with full lifecycle management
-const SCENE_REVEAL_DELAY_MS = 500
+const SCENE_REVEAL_DELAY_MS = 200
 
 let registered = false
 let cleanup: (() => void) | null = null
