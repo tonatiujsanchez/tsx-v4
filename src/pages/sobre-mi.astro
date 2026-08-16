@@ -54,16 +54,6 @@ const jsonLd = {
               Fuera del trabajo practico <strong>Taekwondo</strong> y soy cinta negra 2.º Dan. Es una disciplina que ha influido mucho en mi forma de trabajar: constancia, concentración, respeto y paciencia para seguir hasta resolver algo. De hecho, uno de mis primeros proyectos que desarrollé de forma profesional fue un sistema de puntuación para competencias, construido con Java y MySQL y fue utilizado en varios torneos. También disfruto una buena taza de café, salir al campo y mejorar mi setup, aunque casi siempre termino encontrando algo más que ajustar.
             </p>
           </div>
-
-          <ul class="about__tags" role="list">
-            {aboutTags.map((t, i) => (
-              <li class="about__tag">
-                <span class="about__tag-dot" aria-hidden="true"></span>
-                <span class="about__tag-index">{String(i + 1).padStart(2, '0')}</span>
-                <span class="about__tag-label">{t.label}</span>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <aside class="about__portrait-column" aria-hidden="false">
