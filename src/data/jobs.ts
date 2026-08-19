@@ -34,7 +34,7 @@ export const jobs: Job[] = [
     {
         title: 'Desarrollador Java',
         company: 'Instituto Marcial de TaeKwonDo',
-        period: '2017',
+        period: '2016',
         logo: '/img/jobs/imtkd-logo.webp',
     },
 ];
